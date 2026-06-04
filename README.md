@@ -1,8 +1,20 @@
+# ⚠️ 重要通知 (Important Notice)
+
+> **本 repo 已經停止開發，功能堪用但尚有可優化之處，請自行完善。**
+> 
+> 完整進階版本已商業化，歡迎免費體驗 👉 https://ec-ultra-lp.icareu.tw/
+>
+> This repository is no longer in active development. The features are functional but there is room for optimization. Please feel free to improve it yourself.
+>
+> The full advanced version has been commercialized. Try it for free 👉 https://ec-ultra-lp.icareu.tw/
+
+---
+
 # AI Product Marketing Designer PRO v0.8
 
 **AI Product Marketing Designer PRO** 是一個專為行銷人員與產品經理打造的智慧化視覺生產力工具。
 
-基於 Google 最新一代的 **Gemini 2.5 Flash** (推理與視覺) 與 **Gemini 3 Pro Image** (圖像生成) 模型，它能扮演您的「AI 創意總監」與「社群內容規劃師」，從單張產品圖出發，自動拆解品牌 DNA，並生成包含廣告主圖與社群 Stories 的完整銷售漏斗素材包。
+基於 Google 最新一代的 **Gemini 2.5 Flash** (推理與視覺) 與 **Gemini 3 Pro Image** (圖像生成) 模型，它能扮演您的「AI 創意總監」與「社群內容規劃師」，從產品圖自動生成完整行銷素材包，同時生成三條行銷策略路線，一批次產出產品海報、商品主圖及介紹長條圖 。
 
 ## 🌐 立即體驗 (Try it Now)
 
@@ -44,7 +56,7 @@
 ### 4. 專業工作流：審閱與製作 (Review & Production Workflow)
 v0.8 採用專業的廣告製作流程：
 *   **腳本審閱模式 (Script Review)**: 在生成圖片前，您可以完全掌控並編輯每一張圖的文案 (Copy) 與 AI 繪圖提示詞 (Prompt)。
-*   **精細化控圖 (Reference Control)**: 支援為企劃中的**每一張圖**單獨上傳參考圖片 (例如：最後一張 CTA 圖需要放上特定的 Logo，或第一張圖需要參考特定配色)。
+*   **精細化控圖 (Reference Control)**: 支援為企劃中的**每一張圖**單獨上傳參考圖片 (例如：最後一張 CTA 圖需要放上特定的 Logo，或第一張圖需要參考特定品牌視覺)。
 *   **一鍵量產**: 確認無誤後，切換至製作模式即可快速生成高品質素材。
 *   **圖片放大檢視**: 所有生成的圖片都支援放大檢視功能，方便檢查細節。
 *   **一鍵下載所有圖檔**: 批次下載功能，支援 ZIP 打包，採用英文關鍵字命名規則，方便後續網頁建置自動化。
@@ -159,7 +171,7 @@ v0.8 採用專業的廣告製作流程：
 
 如果您對 AI 視覺行銷工具感興趣，歡迎同步參考以下相關專案：
 
-*   **[AI Digital Portrait Studio](https://github.com/mkhsu2002/AI_Digital_Portrait_Studio)** - 專為電商設計 AI 人像圖片生成工具，免去繁複的手動輸入提示詞，整合 Gemini 影像模型與 Firebase，一鍵生成多視角專業人像商品圖，支援自訂風格、背景、姿態等參數。
+*   **[AI Digital Portrait Studio](https://github.com/mkhsu2002/AI_Digital_Portrait_Studio)** - 專為電商設計 AI 人像圖片生成工具，免去繁複的手動輸入提示詞，整合 Gemini 視覺與圖像生成能力
 *   **[EC SEO SA](https://github.com/mkhsu2002/EC_SEO_SA)** - 電商 SEO 與內容行銷工具
 
 ---

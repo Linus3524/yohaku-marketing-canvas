@@ -1,5 +1,6 @@
 import React from 'react';
 import { MarketAnalysis as MarketAnalysisType } from '../types';
+import { Download } from 'lucide-react';
 
 interface MarketAnalysisProps {
   analysis: MarketAnalysisType;
@@ -11,16 +12,14 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
   return (
     <div className="w-full max-w-6xl mx-auto px-4 pb-20">
       <div className="mb-10">
-        <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
-          <h3 className="text-xl font-bold text-white serif">Phase 3: 產品市場分析</h3>
+        <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
+          <h3 className="text-xl font-bold text-slate-800 serif">Phase 3: 產品市場分析</h3>
           {onDownload && (
             <button
               onClick={onDownload}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 shadow-sm"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
+              <Download className="w-4 h-4" />
               下載分析報告
             </button>
           )}
@@ -28,30 +27,30 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 產品核心價值 */}
-      <div className="mb-8 bg-[#15151a] rounded-xl p-6 border border-white/5">
-        <h4 className="text-lg font-bold text-white mb-4">產品核心價值</h4>
+      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+        <h4 className="text-lg font-bold text-slate-800 mb-4">產品核心價值</h4>
         
-        <div className="mb-6">
-          <h5 className="text-sm font-semibold text-gray-400 mb-2">主要特色</h5>
-          <ul className="list-disc list-inside space-y-1 text-gray-300">
+        <div className="mb-6 bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
+          <h5 className="text-sm font-bold text-slate-500 mb-2">主要特色</h5>
+          <ul className="list-disc list-inside space-y-1.5 text-slate-600 text-sm leading-relaxed">
             {analysis.productCoreValue.mainFeatures.map((feature, idx) => (
               <li key={idx}>{feature}</li>
             ))}
           </ul>
         </div>
         
-        <div className="mb-6">
-          <h5 className="text-sm font-semibold text-gray-400 mb-2">核心優勢</h5>
-          <ul className="list-disc list-inside space-y-1 text-gray-300">
+        <div className="mb-6 bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
+          <h5 className="text-sm font-bold text-slate-500 mb-2">核心優勢</h5>
+          <ul className="list-disc list-inside space-y-1.5 text-slate-600 text-sm leading-relaxed">
             {analysis.productCoreValue.coreAdvantages.map((advantage, idx) => (
               <li key={idx}>{advantage}</li>
             ))}
           </ul>
         </div>
         
-        <div>
-          <h5 className="text-sm font-semibold text-gray-400 mb-2">解決的痛點</h5>
-          <ul className="list-disc list-inside space-y-1 text-gray-300">
+        <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
+          <h5 className="text-sm font-bold text-slate-500 mb-2">解決的痛點</h5>
+          <ul className="list-disc list-inside space-y-1.5 text-slate-600 text-sm leading-relaxed">
             {analysis.productCoreValue.painPointsSolved.map((painPoint, idx) => (
               <li key={idx}>{painPoint}</li>
             ))}
@@ -60,30 +59,30 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 目標市場定位 */}
-      <div className="mb-8 bg-[#15151a] rounded-xl p-6 border border-white/5">
-        <h4 className="text-lg font-bold text-white mb-4">目標市場定位</h4>
+      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+        <h4 className="text-lg font-bold text-slate-800 mb-4">目標市場定位</h4>
         
-        <div className="space-y-4">
-          <div>
-            <h5 className="text-sm font-semibold text-gray-400 mb-2">文化洞察</h5>
-            <p className="text-gray-300">{analysis.marketPositioning.culturalInsights}</p>
+        <div className="space-y-6">
+          <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
+            <h5 className="text-sm font-bold text-slate-500 mb-2">文化洞察</h5>
+            <p className="text-slate-600 text-sm leading-relaxed">{analysis.marketPositioning.culturalInsights}</p>
           </div>
           
-          <div>
-            <h5 className="text-sm font-semibold text-gray-400 mb-2">消費習慣</h5>
-            <p className="text-gray-300">{analysis.marketPositioning.consumerHabits}</p>
+          <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
+            <h5 className="text-sm font-bold text-slate-500 mb-2">消費習慣</h5>
+            <p className="text-slate-600 text-sm leading-relaxed">{analysis.marketPositioning.consumerHabits}</p>
           </div>
           
-          <div>
-            <h5 className="text-sm font-semibold text-gray-400 mb-2">語言特性</h5>
-            <p className="text-gray-300">{analysis.marketPositioning.languageNuances}</p>
+          <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
+            <h5 className="text-sm font-bold text-slate-500 mb-2">語言特性</h5>
+            <p className="text-slate-600 text-sm leading-relaxed">{analysis.marketPositioning.languageNuances}</p>
           </div>
           
-          <div>
-            <h5 className="text-sm font-semibold text-gray-400 mb-2">搜尋趨勢</h5>
+          <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
+            <h5 className="text-sm font-bold text-slate-500 mb-3">搜尋趨勢</h5>
             <div className="flex flex-wrap gap-2">
               {analysis.marketPositioning.searchTrends.map((trend, idx) => (
-                <span key={idx} className="px-3 py-1 bg-white/10 rounded-full text-sm text-gray-300">
+                <span key={idx} className="px-3.5 py-1 bg-slate-100 border border-slate-200/60 rounded-full text-xs text-slate-600 font-semibold shadow-xs">
                   {trend}
                 </span>
               ))}
@@ -93,17 +92,17 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 競爭對手分析 */}
-      <div className="mb-8 bg-[#15151a] rounded-xl p-6 border border-white/5">
-        <h4 className="text-lg font-bold text-white mb-4">競爭對手分析</h4>
+      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+        <h4 className="text-lg font-bold text-slate-800 mb-4">競爭對手分析</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {analysis.competitors.map((competitor, idx) => (
-            <div key={idx} className="bg-[#1a1a1f] rounded-lg p-4 border border-white/5">
-              <h5 className="text-base font-bold text-white mb-2">{competitor.brandName}</h5>
-              <p className="text-sm text-gray-400 mb-3">{competitor.marketingStrategy}</p>
+            <div key={idx} className="bg-slate-50 rounded-2xl p-5 border border-slate-200/60">
+              <h5 className="text-base font-bold text-slate-800 mb-2">{competitor.brandName}</h5>
+              <p className="text-xs text-slate-500 mb-4 leading-relaxed font-medium">{competitor.marketingStrategy}</p>
               
-              <div className="mb-3">
-                <h6 className="text-xs font-semibold text-green-400 mb-1">優勢</h6>
-                <ul className="list-disc list-inside space-y-1 text-xs text-gray-300">
+              <div className="mb-4">
+                <h6 className="text-xs font-bold text-green-700 mb-1.5">優勢</h6>
+                <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 leading-relaxed">
                   {competitor.advantages.map((adv, i) => (
                     <li key={i}>{adv}</li>
                   ))}
@@ -111,8 +110,8 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
               </div>
               
               <div>
-                <h6 className="text-xs font-semibold text-red-400 mb-1">劣勢</h6>
-                <ul className="list-disc list-inside space-y-1 text-xs text-gray-300">
+                <h6 className="text-xs font-bold text-red-700 mb-1.5">劣勢</h6>
+                <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 leading-relaxed">
                   {competitor.weaknesses.map((weak, i) => (
                     <li key={i}>{weak}</li>
                   ))}
@@ -124,28 +123,28 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 潛在客戶描繪 */}
-      <div className="mb-8 bg-[#15151a] rounded-xl p-6 border border-white/5">
-        <h4 className="text-lg font-bold text-white mb-4">潛在客戶描繪</h4>
+      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+        <h4 className="text-lg font-bold text-slate-800 mb-4">潛在客戶描繪</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {analysis.buyerPersonas.map((persona, idx) => (
-            <div key={idx} className="bg-[#1a1a1f] rounded-lg p-4 border border-white/5">
-              <h5 className="text-base font-bold text-white mb-2">{persona.name}</h5>
-              <p className="text-sm text-gray-300 mb-3">{persona.demographics}</p>
+            <div key={idx} className="bg-slate-50 rounded-2xl p-5 border border-slate-200/60">
+              <h5 className="text-base font-bold text-slate-800 mb-2">{persona.name}</h5>
+              <p className="text-xs text-slate-500 mb-4 leading-relaxed font-medium">{persona.demographics}</p>
               
-              <div className="mb-3">
-                <h6 className="text-xs font-semibold text-gray-400 mb-1">興趣</h6>
+              <div className="mb-4">
+                <h6 className="text-xs font-bold text-slate-400 mb-1.5">興趣</h6>
                 <div className="flex flex-wrap gap-1">
                   {persona.interests.map((interest, i) => (
-                    <span key={i} className="px-2 py-0.5 bg-white/10 rounded text-xs text-gray-300">
+                    <span key={i} className="px-2.5 py-0.5 bg-slate-100 border border-slate-200/60 rounded-md text-[10px] font-semibold text-slate-600">
                       {interest}
                     </span>
                   ))}
                 </div>
               </div>
               
-              <div className="mb-3">
-                <h6 className="text-xs font-semibold text-gray-400 mb-1">痛點</h6>
-                <ul className="list-disc list-inside space-y-1 text-xs text-gray-300">
+              <div className="mb-4">
+                <h6 className="text-xs font-bold text-slate-400 mb-1.5">痛點</h6>
+                <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 leading-relaxed">
                   {persona.painPoints.map((pain, i) => (
                     <li key={i}>{pain}</li>
                   ))}
@@ -153,10 +152,10 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
               </div>
               
               <div>
-                <h6 className="text-xs font-semibold text-gray-400 mb-1">搜尋關鍵字</h6>
+                <h6 className="text-xs font-bold text-slate-400 mb-1.5">搜尋關鍵字</h6>
                 <div className="flex flex-wrap gap-1">
                   {persona.searchKeywords.map((keyword, i) => (
-                    <span key={i} className="px-2 py-0.5 bg-blue-500/20 rounded text-xs text-blue-300">
+                    <span key={i} className="px-2.5 py-0.5 bg-blue-50 border border-blue-200 rounded-md text-[10px] font-semibold text-blue-600">
                       {keyword}
                     </span>
                   ))}

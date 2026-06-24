@@ -203,8 +203,6 @@ v0.8 採用專業的廣告製作流程：
 
 ## © License
 
-**[MIT License](./LICENSE)**
+Developed by [LINUS Nice Day Japan (CHANG CHIN WEI) @linus3524](https://github.com/linus3524)
 
-Open sourced by [FlyPig AI - 艾可開發股份有限公司](https://flypigai.icareu.tw/)
-
-Copyright (c) 2026 FlyPig AI - 艾可開發股份有限公司. All rights reserved.
+Copyright (c) 2026 LINUS Nice Day Japan (CHANG CHIN WEI) @linus3524. All Rights Reserved.

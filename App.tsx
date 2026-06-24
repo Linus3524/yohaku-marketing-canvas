@@ -22,6 +22,7 @@ import { generatePhase1Report, generatePhase3Report, generatePhase4Report } from
 import { generateFullReport } from './services/geminiService';
 import { downloadTextFile } from './utils/downloadHelper';
 import { FILE_LIMITS } from './utils/constants';
+import { FileText, Download } from 'lucide-react';
 
 const App: React.FC = () => {
   // --- Core State ---
@@ -304,28 +305,27 @@ const App: React.FC = () => {
 
         {/* Route Selection */}
         <div className="mb-10">
-          <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+          <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">1</div>
-                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400 flex-1">
-                  Phase 1: 視覺策略選擇 / Select Concept
-                </h2>
-                {analysisResult?._debugPrompt && (
-                  <button
-                    onClick={() => setDebugModalPhase(1)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors flex items-center gap-1 border border-white/5"
-                  >
-                    📝 檢視提示詞
-                  </button>
-                )}
-              </div>
+              <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">1</div>
+              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 flex-1">
+                Phase 1: 視覺策略選擇 / Select Concept
+              </h2>
+              {analysisResult?._debugPrompt && (
+                <button
+                  onClick={() => setDebugModalPhase(1)}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-colors flex items-center gap-1 border border-slate-200"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  檢視提示詞
+                </button>
+              )}
+            </div>
             <button
               onClick={handleDownloadPhase1Report}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold rounded-lg transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 shadow-sm"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
+              <Download className="w-4 h-4" />
               下載策略報告
             </button>
           </div>
@@ -335,8 +335,8 @@ const App: React.FC = () => {
                 key={idx}
                 onClick={() => handleRouteChange(idx)}
                 className={`p-4 rounded-xl border text-left transition-all duration-300 ${activeRouteIndex === idx
-                    ? 'bg-white text-black border-white scale-[1.02]'
-                    : 'bg-[#15151a] text-gray-400 border-white/5 hover:bg-[#1a1a1f]'
+                    ? 'bg-white text-slate-900 border-slate-300 shadow-sm scale-[1.02]'
+                    : 'bg-white/60 text-slate-500 border-slate-200/50 hover:bg-white hover:text-slate-800'
                   }`}
               >
                 <div className="text-xs font-bold uppercase opacity-70">Route {String.fromCharCode(65 + idx)}</div>
@@ -381,35 +381,35 @@ const App: React.FC = () => {
         {/* Phase 3 */}
         {isPhase3Visible && (
           <Phase3Section
-          appState={appState}
-          marketAnalysis={marketAnalysis}
-          onGenerateMarketAnalysis={handleGenerateMarketAnalysis}
-          onOpenDebug={() => setDebugModalPhase(3)}
-          debugPromptAvailable={!!marketAnalysis?._debugPrompt}
-          productName={productName}
-          region={marketRegion}
-          onRegionChange={setMarketRegion}
-          onDownloadPhase3Report={handleDownloadPhase3Report}
+            appState={appState}
+            marketAnalysis={marketAnalysis}
+            onGenerateMarketAnalysis={handleGenerateMarketAnalysis}
+            onOpenDebug={() => setDebugModalPhase(3)}
+            debugPromptAvailable={!!marketAnalysis?._debugPrompt}
+            productName={productName}
+            region={marketRegion}
+            onRegionChange={setMarketRegion}
+            onDownloadPhase3Report={handleDownloadPhase3Report}
           />
         )}
 
         {/* Phase 4 */}
         {isPhase4Visible && (
           <Phase4Section
-          appState={appState}
-          contentStrategy={contentStrategy}
-          onGenerateContentStrategy={handleGenerateContentStrategy}
-          onOpenDebug={() => setDebugModalPhase(4)}
-          debugPromptAvailable={!!contentStrategy?._debugPrompt}
-          productName={productName}
-          onDownloadPhase4Report={handleDownloadPhase4Report}
+            appState={appState}
+            contentStrategy={contentStrategy}
+            onGenerateContentStrategy={handleGenerateContentStrategy}
+            onOpenDebug={() => setDebugModalPhase(4)}
+            debugPromptAvailable={!!contentStrategy?._debugPrompt}
+            productName={productName}
+            onDownloadPhase4Report={handleDownloadPhase4Report}
           />
         )}
 
         {/* Phase 5 */}
         {isPhase5Visible && (
           <Phase5Section
-          productName={productName}
+            productName={productName}
           />
         )}
       </div>
@@ -417,36 +417,36 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f12] text-slate-200 selection:bg-purple-500 selection:text-white font-sans flex flex-col">
+    <div className="min-h-screen bg-[#f5f5f7] text-slate-800 selection:bg-blue-500 selection:text-white font-sans flex flex-col">
       <GuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
       <ApiKeyModal isOpen={isKeyModalOpen} onSave={(key: string) => { setIsKeyModalOpen(false); setHasKey(true); }} />
 
       {/* Header */}
-      <header className="w-full py-6 border-b border-white/5 bg-[#0f0f12]/90 backdrop-blur-md sticky top-0 z-50">
+      <header className="w-full py-4 border-b border-slate-200/50 bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setAppState(AppState.IDLE)}>
-            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-purple-600/50">
-              <span className="text-white font-bold">PM</span>
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/10">
+              <span className="text-white font-bold">YH</span>
             </div>
-            <h1 className="text-lg font-bold text-white hidden md:block">
-              AI Product Marketing Designer <span className="text-purple-500 text-xs align-top ml-1">PRO</span>
+            <h1 className="text-lg font-bold text-slate-800 hidden md:block">
+              YOHAKU 電商設計大師 <span className="text-blue-600 text-xs align-top ml-1">PRO</span>
             </h1>
           </div>
           <div className="flex gap-4 items-center">
-            <button onClick={() => setIsGuideOpen(true)} className="text-gray-400 hover:text-white text-sm font-medium transition-colors">功能導覽 v0.8</button>
+            <button onClick={() => setIsGuideOpen(true)} className="text-slate-500 hover:text-slate-800 text-sm font-medium transition-colors">功能導覽 v0.8</button>
 
             {/* Language Mode Switcher */}
-            <div className="flex items-center gap-2 bg-[#1a1a1f] rounded-lg p-1 border border-white/10">
+            <div className="flex items-center gap-2 bg-slate-200/50 rounded-lg p-1 border border-slate-200/40">
               <button
                 onClick={() => handleLanguageModeChange(LanguageMode.ZH_TW)}
-                className={`px-3 py-1 rounded text-xs font-bold transition-colors ${languageMode === LanguageMode.ZH_TW ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                className={`px-3 py-1 rounded text-xs font-bold transition-colors ${languageMode === LanguageMode.ZH_TW ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 繁體中文
               </button>
               <button
                 onClick={() => handleLanguageModeChange(LanguageMode.EN)}
                 disabled
-                className={`px-3 py-1 rounded text-xs font-bold transition-colors relative ${languageMode === LanguageMode.EN ? 'bg-purple-600 text-white' : 'text-gray-500 cursor-not-allowed opacity-50'}`}
+                className={`px-3 py-1 rounded text-xs font-bold transition-colors relative ${languageMode === LanguageMode.EN ? 'bg-blue-600 text-white' : 'text-slate-400 cursor-not-allowed opacity-50'}`}
                 title="英文模式開發中"
               >
                 英文
@@ -454,7 +454,7 @@ const App: React.FC = () => {
               </button>
             </div>
 
-            <button onClick={() => setIsKeyModalOpen(true)} className="text-purple-400 hover:text-purple-300 text-sm font-bold">
+            <button onClick={() => setIsKeyModalOpen(true)} className="text-blue-600 hover:text-blue-500 text-sm font-bold">
               {hasKey ? '更換 API Key' : '設定 API Key'}
             </button>
           </div>
@@ -467,27 +467,27 @@ const App: React.FC = () => {
 
         {/* Loading States */}
         {appState === AppState.ANALYZING && (
-          <LoadingOverlay title="AI 總監正在分析產品" description="正在解讀品牌語意與視覺特徵..." colorClass="purple" />
+          <LoadingOverlay title="AI 總監正在分析產品" description="正在解讀品牌語意與視覺特徵..." colorClass="blue" />
         )}
         {appState === AppState.ANALYZING_MARKET && (
           <LoadingOverlay title="Phase 3: 市場分析中" description="正在分析產品核心價值、市場定位、競爭對手與潛在客戶..." colorClass="blue" />
         )}
         {appState === AppState.ANALYZING_CONTENT && (
-          <LoadingOverlay title="Phase 4: 內容策略生成中" description="正在生成內容主題、SEO 策略與 AI Studio 提示詞..." colorClass="green" />
+          <LoadingOverlay title="Phase 4: 內容策略生成中" description="正在生成內容主題、SEO 策略與 AI Studio 提示詞..." colorClass="blue" />
         )}
 
         {/* Idle View */}
         {appState === AppState.IDLE && (
           <div className="flex-1 flex flex-col items-center mt-8 text-center">
-            <div className="inline-block px-3 py-1 rounded-full bg-purple-900/30 border border-purple-500/30 text-purple-300 text-xs font-bold uppercase tracking-widest mb-6">
+            <div className="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
               v0.8
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-white serif mb-4 leading-tight">
+            <h2 className="text-4xl md:text-6xl font-bold text-slate-900 serif mb-4 leading-tight">
               打造完整的<br />品牌視覺資產
             </h2>
-            <p className="text-gray-400 max-w-xl mx-auto mb-8 text-lg">
+            <p className="text-slate-500 max-w-xl mx-auto mb-8 text-lg">
               結合產品識別、品牌故事與競品策略。<br />
-              一鍵生成廣告海報與 <span className="text-purple-400 font-bold">8 張完整的社群行銷套圖</span>。
+              一鍵生成廣告海報與 <span className="text-blue-600 font-bold">8 張完整的社群行銷套圖</span>。
             </p>
             <InputForm
               productName={productName}
@@ -513,8 +513,8 @@ const App: React.FC = () => {
         {isPhaseResultsVisible && renderPhase1Results()}
       </main>
 
-      <footer className="w-full py-6 text-center border-t border-white/5 text-xs text-gray-600">
-        © 2026 <a href="https://flypigai.icareu.tw/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-purple-400 transition-colors font-bold">FlyPig AI - 艾可開發股份有限公司</a>. All rights reserved.
+      <footer className="w-full py-6 text-center border-t border-slate-200/50 text-xs text-slate-400">
+        © 2026 <span className="font-bold text-slate-500">LINUS Nice Day Japan (CHANG CHIN WEI) @linus3524</span> All Rights Reserved.
       </footer>
 
       <DebugPromptModal 

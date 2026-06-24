@@ -30,13 +30,40 @@ export const createClient = (): GoogleGenAI => {
 // --- JSON Helpers ---
 
 export const cleanJson = (text: string): string => {
+  if (!text) return "";
   let clean = text.trim();
-  if (clean.startsWith("```json")) {
-    clean = clean.replace(/^```json/, "").replace(/```$/, "");
-  } else if (clean.startsWith("```")) {
-    clean = clean.replace(/^```/, "").replace(/```$/, "");
+
+  // 嘗試使用正則表達式尋找 markdown 中的 JSON 程式碼區塊
+  const jsonBlockRegex = /```(?:json)?\s*([\s\S]*?)\s*```/;
+  const match = clean.match(jsonBlockRegex);
+  if (match) {
+    clean = match[1].trim();
   }
-  return clean.trim();
+
+  // 如果仍不符合 JSON 物件或陣列的開頭，尋找第一個 '{' 或 '[' 和最後一個 '}' 或 ']'
+  if (!clean.startsWith("{") && !clean.startsWith("[")) {
+    const firstBrace = clean.indexOf("{");
+    const firstBracket = clean.indexOf("[");
+    let startIdx = -1;
+    let endIdx = -1;
+
+    if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+      startIdx = firstBrace;
+      endIdx = clean.lastIndexOf("}");
+    } else if (firstBracket !== -1) {
+      startIdx = firstBracket;
+      endIdx = clean.lastIndexOf("]");
+    }
+
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      clean = clean.substring(startIdx, endIdx + 1).trim();
+    }
+  }
+
+  // 移除可能存在的 BOM 字元 (Byte Order Mark)
+  clean = clean.replace(/^\uFEFF/, "");
+
+  return clean;
 };
 
 // --- File Helpers ---

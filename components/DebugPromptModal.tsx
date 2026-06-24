@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { X, Copy, Check, Terminal } from 'lucide-react';
 
 interface DebugPromptModalProps {
   isOpen: boolean;
@@ -24,39 +25,47 @@ export const DebugPromptModal: React.FC<DebugPromptModalProps> = ({ isOpen, prom
 
   return (
     <div 
-      className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+      className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md"
       onClick={onClose}
     >
       <div 
-        className="bg-[#1e1e24] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl relative"
+        className="bg-white/80 border border-slate-200/50 rounded-3xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl backdrop-blur-xl relative animate-in fade-in zoom-in duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            <span className="text-xl">🐛</span> 
+        <div className="flex items-center justify-between p-4 border-b border-slate-200/60">
+          <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <Terminal className="w-5 h-5 text-blue-600" />
             {phaseName} 生成提示詞 Debug
           </h3>
           <div className="flex items-center gap-2">
             <button
                onClick={handleCopy}
-               className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors flex items-center gap-1 ${copied ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 border border-white/10'}`}
+               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${copied ? 'bg-green-50 text-green-600 border border-green-200 shadow-sm' : 'bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200 border border-slate-200 shadow-sm'}`}
             >
-              {copied ? '已複製！' : '複製內容'}
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5" />
+                  已複製！
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  複製內容
+                </>
+              )}
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-white transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Content Body */}
-        <div className="p-4 flex-1 overflow-y-auto bg-[#0a0a0d] m-4 rounded-xl border border-white/5 font-mono text-sm leading-relaxed text-gray-300 shadow-inner custom-scrollbar whitespace-pre-wrap">
+        <div className="p-4 flex-1 overflow-y-auto bg-slate-50 m-4 rounded-xl border border-slate-200 font-mono text-xs leading-relaxed text-slate-800 shadow-inner whitespace-pre-wrap">
           {promptContent}
         </div>
       </div>

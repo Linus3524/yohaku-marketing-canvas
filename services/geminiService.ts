@@ -77,6 +77,7 @@ export const analyzeProductImage = async (
         config: {
           systemInstruction: DIRECTOR_SYSTEM_PROMPT,
           responseMimeType: "application/json",
+          maxOutputTokens: 8192
         },
       });
     }, API_CONFIG.MAX_RETRIES, API_CONFIG.INITIAL_DELAY);
@@ -127,7 +128,8 @@ export const generateContentPlan = async (
         config: {
           systemInstruction: CONTENT_PLANNER_SYSTEM_PROMPT,
           responseMimeType: "application/json",
-          thinkingConfig: { thinkingBudget: API_CONFIG.THINKING_BUDGET }
+          thinkingConfig: { thinkingBudget: API_CONFIG.THINKING_BUDGET },
+          maxOutputTokens: 8192
         }
       });
     }, API_CONFIG.MAX_RETRIES, API_CONFIG.INITIAL_DELAY);
@@ -315,7 +317,8 @@ export const generateMarketAnalysis = async (
         config: {
           systemInstruction: MARKET_ANALYST_SYSTEM_PROMPT,
           responseMimeType: "application/json",
-          thinkingConfig: { thinkingBudget: API_CONFIG.THINKING_BUDGET }
+          thinkingConfig: { thinkingBudget: API_CONFIG.THINKING_BUDGET },
+          maxOutputTokens: 8192
         }
       });
     }, API_CONFIG.MAX_RETRIES, API_CONFIG.INITIAL_DELAY);
@@ -373,7 +376,8 @@ export const generateContentStrategy = async (
         config: {
           systemInstruction: CONTENT_STRATEGIST_SYSTEM_PROMPT,
           responseMimeType: "application/json",
-          thinkingConfig: { thinkingBudget: API_CONFIG.THINKING_BUDGET }
+          thinkingConfig: { thinkingBudget: API_CONFIG.THINKING_BUDGET },
+          maxOutputTokens: 8192
         }
       });
     }, API_CONFIG.MAX_RETRIES, API_CONFIG.INITIAL_DELAY);

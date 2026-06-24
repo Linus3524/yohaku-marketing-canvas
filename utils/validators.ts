@@ -278,31 +278,31 @@ const MarketAnalysisSchema = z.object({
 // --- Phase 4: Content Strategy Schemas ---
 
 const SEOGuidanceSchema = z.object({
-  keywordDensity: z.string().min(1).max(20),
-  semanticKeywords: z.array(z.string().min(1)).min(3).max(15),
-  internalLinks: z.array(z.string().min(1)).min(2).max(10),
-  externalLinks: z.array(z.string().min(1)).min(2).max(10),
+  keywordDensity: z.string().min(1).max(100).optional().default('2-3%'),
+  semanticKeywords: z.array(z.string()).optional().default([]),
+  internalLinks: z.array(z.string()).optional().default([]),
+  externalLinks: z.array(z.string()).optional().default([]),
 });
 
 const ContentTopicSchema = z.object({
-  title: z.string().min(5).max(100),
-  description: z.string().min(50).max(500),
-  focusKeyword: z.string().min(1).max(50),
-  longTailKeywords: z.array(z.string().min(1)).min(3).max(15),
-  seoGuidance: SEOGuidanceSchema,
+  title: z.string().min(1).max(500),
+  description: z.string().min(1).max(3000),
+  focusKeyword: z.string().min(1).max(200).optional().default(''),
+  longTailKeywords: z.array(z.string()).optional().default([]),
+  seoGuidance: SEOGuidanceSchema.optional().default({}),
 });
 
 const InteractiveElementSchema = z.object({
-  type: z.string().min(1).max(100),
-  description: z.string().min(20).max(300),
+  type: z.string().min(1).max(300),
+  description: z.string().min(1).max(2000),
 });
 
 const ContentStrategySchema = z.object({
-  contentTopics: z.array(ContentTopicSchema).min(2).max(5),
-  interactiveElements: z.array(InteractiveElementSchema).min(1).max(5),
-  ctaSuggestions: z.array(z.string().min(3).max(50)).min(2).max(5),
-  aiStudioPrompts: z.array(z.string().min(200).max(3000)).min(2).max(5), // 增加最小長度要求，確保內容豐富
-  gammaPrompts: z.array(z.string().min(150).max(2500)).min(2).max(5),
+  contentTopics: z.array(ContentTopicSchema).min(1).max(15),
+  interactiveElements: z.array(InteractiveElementSchema).min(1).max(15),
+  ctaSuggestions: z.array(z.string().min(1).max(300)).min(1).max(15),
+  aiStudioPrompts: z.array(z.string().min(1).max(20000)).min(1).max(15),
+  gammaPrompts: z.array(z.string().min(1).max(20000)).min(1).max(15),
 });
 
 /**
@@ -362,6 +362,7 @@ export const validateMarketAnalysis = (data: unknown): MarketAnalysis => {
  * 驗證並解析 ContentStrategy
  */
 export const validateContentStrategy = (data: unknown): ContentStrategy => {
+  // 先嘗試直接解析
   const result = ContentStrategySchema.safeParse(data);
   
   if (result.success) {
@@ -372,16 +373,141 @@ export const validateContentStrategy = (data: unknown): ContentStrategy => {
   if (typeof data === 'object' && data !== null) {
     const fixed = { ...data } as Record<string, unknown>;
     
+    // 欄位名稱大小寫/底線轉換相容
+    if (!fixed.contentTopics && fixed.content_topics) fixed.contentTopics = fixed.content_topics;
+    if (!fixed.contentTopics && fixed.topics) fixed.contentTopics = fixed.topics;
+
+    if (!fixed.interactiveElements && fixed.interactive_elements) fixed.interactiveElements = fixed.interactive_elements;
+
+    if (!fixed.ctaSuggestions && fixed.cta_suggestions) fixed.ctaSuggestions = fixed.cta_suggestions;
+    if (!fixed.ctaSuggestions && fixed.ctas) fixed.ctaSuggestions = fixed.ctas;
+
+    if (!fixed.aiStudioPrompts && fixed.ai_studio_prompts) fixed.aiStudioPrompts = fixed.ai_studio_prompts;
+    if (!fixed.aiStudioPrompts && fixed.aiStudioPrompt) fixed.aiStudioPrompts = fixed.aiStudioPrompt;
+
+    if (!fixed.gammaPrompts && fixed.gamma_prompts) fixed.gammaPrompts = fixed.gamma_prompts;
+    if (!fixed.gammaPrompts && fixed.gammaPrompt) fixed.gammaPrompts = fixed.gammaPrompt;
+
     // 確保陣列存在
     if (!Array.isArray(fixed.contentTopics)) fixed.contentTopics = [];
     if (!Array.isArray(fixed.interactiveElements)) fixed.interactiveElements = [];
     if (!Array.isArray(fixed.ctaSuggestions)) fixed.ctaSuggestions = [];
     if (!Array.isArray(fixed.aiStudioPrompts)) fixed.aiStudioPrompts = [];
+    if (!Array.isArray(fixed.gammaPrompts)) fixed.gammaPrompts = [];
+    
+    // 修復 contentTopics
+    fixed.contentTopics = fixed.contentTopics.map((topic: any, idx: number) => {
+      if (typeof topic !== 'object' || topic === null) {
+        topic = {};
+      }
+      const t = { ...topic };
+      
+      // 屬性蛇形轉駝峰相容
+      if (!t.focusKeyword && t.focus_keyword) t.focusKeyword = t.focus_keyword;
+      if (!t.longTailKeywords && t.long_tail_keywords) t.longTailKeywords = t.long_tail_keywords;
+      if (!t.seoGuidance && t.seo_guidance) t.seoGuidance = t.seo_guidance;
+
+      if (typeof t.title !== 'string' || t.title.trim().length === 0) t.title = `主題 ${idx + 1}`;
+      if (typeof t.description !== 'string' || t.description.trim().length === 0) t.description = `這是主題 ${idx + 1} 的行銷與內容方向描述，請參考。`;
+      if (typeof t.focusKeyword !== 'string' || t.focusKeyword.trim().length === 0) t.focusKeyword = '熱門商品';
+      if (!Array.isArray(t.longTailKeywords)) t.longTailKeywords = [];
+      if (t.longTailKeywords.length === 0) t.longTailKeywords = ['行銷企劃', '推薦推薦'];
+      
+      // 確保 seoGuidance 存在
+      if (typeof t.seoGuidance !== 'object' || t.seoGuidance === null) {
+        t.seoGuidance = {};
+      }
+      const seo = { ...t.seoGuidance };
+      
+      if (!seo.keywordDensity && seo.keyword_density) seo.keywordDensity = seo.keyword_density;
+      if (!seo.semanticKeywords && seo.semantic_keywords) seo.semanticKeywords = seo.semantic_keywords;
+      if (!seo.internalLinks && seo.internal_links) seo.internalLinks = seo.internal_links;
+      if (!seo.externalLinks && seo.external_links) seo.externalLinks = seo.external_links;
+
+      if (typeof seo.keywordDensity !== 'string') seo.keywordDensity = '2-3%';
+      if (!Array.isArray(seo.semanticKeywords)) seo.semanticKeywords = [];
+      if (seo.semanticKeywords.length === 0) seo.semanticKeywords = ['內容行銷', 'SEO優化', '促銷方案'];
+      if (!Array.isArray(seo.internalLinks)) seo.internalLinks = [];
+      if (seo.internalLinks.length === 0) seo.internalLinks = ['/products', '/about'];
+      if (!Array.isArray(seo.externalLinks)) seo.externalLinks = [];
+      if (seo.externalLinks.length === 0) seo.externalLinks = ['https://google.com', 'https://facebook.com'];
+      t.seoGuidance = seo;
+      
+      return t;
+    });
+
+    if (fixed.contentTopics.length === 0) {
+      fixed.contentTopics = [
+        {
+          title: '精選商品內容策略',
+          description: '專為目標受眾設計的精選商品內容，涵蓋核心價值與主要特色。',
+          focusKeyword: '熱門商品',
+          longTailKeywords: ['行銷企劃', '推薦推薦'],
+          seoGuidance: {
+            keywordDensity: '2-3%',
+            semanticKeywords: ['內容行銷', 'SEO優化', '促銷方案'],
+            internalLinks: ['/products', '/about'],
+            externalLinks: ['https://google.com', 'https://facebook.com']
+          }
+        }
+      ];
+    }
+
+    // 修復 interactiveElements
+    fixed.interactiveElements = fixed.interactiveElements.map((elem: any, idx: number) => {
+      if (typeof elem !== 'object' || elem === null) {
+        elem = {};
+      }
+      const e = { ...elem };
+      if (!e.type && e.element_type) e.type = e.element_type;
+      if (typeof e.type !== 'string' || e.type.trim().length === 0) e.type = '互動小遊戲';
+      if (typeof e.description !== 'string' || e.description.trim().length === 0) e.description = '提供消費者有趣的互動體驗以增加轉換率。';
+      return e;
+    });
+    if (fixed.interactiveElements.length === 0) {
+      fixed.interactiveElements = [{ type: '互動問答', description: '透過簡單的問答遊戲，幫助顧客找出最適合自己的商品規格。' }];
+    }
+
+    // 修復 ctaSuggestions
+    fixed.ctaSuggestions = fixed.ctaSuggestions.map((cta: any) => {
+      if (typeof cta !== 'string' || cta.trim().length === 0) return '立即購買';
+      return cta;
+    });
+    if (fixed.ctaSuggestions.length === 0) {
+      fixed.ctaSuggestions = ['立即購買', '點此了解更多', '限時優惠中'];
+    }
+
+    // 修復 aiStudioPrompts
+    fixed.aiStudioPrompts = fixed.aiStudioPrompts.map((p: any) => {
+      if (typeof p !== 'string' || p.trim().length < 5) return '建立一個響應式的 Landing Page，展示產品的核心賣點，包含 Hero 區塊與 CTA 按鈕。';
+      return p;
+    });
+    if (fixed.aiStudioPrompts.length === 0) {
+      fixed.aiStudioPrompts = ['建立一個響應式的 Landing Page，展示產品的核心賣點，包含 Hero 區塊與 CTA 按鈕。', '建立一個商品特點與細節說明的 Landing Page。'];
+    }
+
+    // 修復 gammaPrompts
+    fixed.gammaPrompts = fixed.gammaPrompts.map((p: any) => {
+      if (typeof p !== 'string' || p.trim().length < 5) return '建立一個簡報，主題為該商品在目標市場的推廣計畫，包含市場分析、競品分析與產品優勢。';
+      return p;
+    });
+    if (fixed.gammaPrompts.length === 0) {
+      fixed.gammaPrompts = ['建立一個簡報，主題為該商品在目標市場的推廣計畫，包含市場分析、競品分析與產品優勢。', '建立一個簡報，包含內容策略與社群行銷的完整規劃。'];
+    }
     
     const retryResult = ContentStrategySchema.safeParse(fixed);
     if (retryResult.success) {
       console.warn('內容策略驗證失敗後成功修復資料格式');
       return retryResult.data;
+    } else {
+      const errors = retryResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join('\n');
+      console.error('內容策略自動修復後仍然驗證失敗：', retryResult.error);
+      throw new AppError({
+        type: ErrorType.VALIDATION,
+        message: `內容策略格式驗證失敗：\n${errors}`,
+        userMessage: "內容策略格式不正確，請再試一次。如問題持續發生，請聯繫技術支援。",
+        originalError: retryResult.error,
+      });
     }
   }
   

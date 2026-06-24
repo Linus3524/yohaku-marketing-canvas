@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ContentStrategy as ContentStrategyType } from '../types';
+import { Download, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 
 interface ContentStrategyProps {
   strategy: ContentStrategyType;
@@ -20,16 +21,14 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
   return (
     <div className="w-full max-w-6xl mx-auto px-4 pb-20">
       <div className="mb-10">
-        <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
-          <h3 className="text-xl font-bold text-white serif">Phase 4: 內容與 SEO 策略</h3>
+        <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
+          <h3 className="text-xl font-bold text-slate-800 serif">Phase 4: 內容與 SEO 策略</h3>
           {onDownload && (
             <button
               onClick={onDownload}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 shadow-sm"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
+              <Download className="w-4 h-4" />
               下載策略報告
             </button>
           )}
@@ -38,27 +37,27 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
 
       {/* 內容主題 */}
       <div className="mb-8">
-        <h4 className="text-lg font-bold text-white mb-4">內容主題</h4>
+        <h4 className="text-lg font-bold text-slate-800 mb-4">內容主題</h4>
         <div className="space-y-4">
-          {strategy.contentTopics.map((topic, idx) => (
-            <div key={idx} className="bg-[#15151a] rounded-xl p-6 border border-white/5">
-              <div className="flex items-start justify-between mb-4">
+          {(strategy.contentTopics || []).map((topic, idx) => (
+            <div key={idx} className="bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                 <div className="flex-1">
-                  <h5 className="text-base font-bold text-white mb-2">{topic.title}</h5>
-                  <p className="text-sm text-gray-300 mb-3">{topic.description}</p>
+                  <h5 className="text-base font-bold text-slate-800 mb-2">{topic.title}</h5>
+                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">{topic.description}</p>
                   
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="px-3 py-1 bg-blue-500/20 rounded-full text-sm text-blue-300 font-semibold">
-                      主要關鍵字: {topic.focusKeyword}
+                  <div className="flex flex-wrap gap-2 mb-1">
+                    <span className="px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-xs text-blue-600 font-semibold shadow-xs">
+                      主要關鍵字: {topic.focusKeyword || '無'}
                     </span>
-                    {topic.longTailKeywords.slice(0, 3).map((keyword, i) => (
-                      <span key={i} className="px-2 py-1 bg-white/10 rounded text-xs text-gray-300">
+                    {(topic.longTailKeywords || []).slice(0, 3).map((keyword, i) => (
+                      <span key={i} className="px-2.5 py-1 bg-slate-100/80 border border-slate-200/60 rounded-lg text-xs text-slate-500 font-medium">
                         {keyword}
                       </span>
                     ))}
-                    {topic.longTailKeywords.length > 3 && (
-                      <span className="px-2 py-1 bg-white/10 rounded text-xs text-gray-400">
-                        +{topic.longTailKeywords.length - 3} 更多
+                    {(topic.longTailKeywords || []).length > 3 && (
+                      <span className="px-2.5 py-1 bg-slate-100 border border-slate-200/60 rounded-lg text-xs text-slate-400 font-medium">
+                        +{(topic.longTailKeywords || []).length - 3} 更多
                       </span>
                     )}
                   </div>
@@ -66,93 +65,135 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
                 
                 <button
                   onClick={() => setExpandedTopic(expandedTopic === idx ? null : idx)}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm text-white transition-colors"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200/85 rounded-xl text-sm font-semibold text-slate-700 transition-colors flex items-center gap-1.5 self-start shadow-xs"
                 >
-                  {expandedTopic === idx ? '收起' : '展開 SEO 詳情'}
+                  {expandedTopic === idx ? (
+                    <>
+                      <span>收起詳情</span>
+                      <ChevronUp className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      <span>展開 SEO 詳情</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </div>
               
               {expandedTopic === idx && (
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h6 className="text-xs font-semibold text-gray-400 mb-1">關鍵字密度</h6>
-                      <p className="text-sm text-gray-300">{topic.seoGuidance.keywordDensity}</p>
+                <div className="mt-6 pt-6 border-t border-slate-200/80">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/40">
+                      <h6 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">關鍵字密度</h6>
+                      <p className="text-sm text-slate-700 font-medium">{topic.seoGuidance?.keywordDensity || 'N/A'}</p>
                     </div>
                     
-                    <div>
-                      <h6 className="text-xs font-semibold text-gray-400 mb-1">語意關鍵字</h6>
-                      <div className="flex flex-wrap gap-1">
-                        {topic.seoGuidance.semanticKeywords.map((keyword, i) => (
-                          <span key={i} className="px-2 py-0.5 bg-purple-500/20 rounded text-xs text-purple-300">
+                    <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/40">
+                      <h6 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">語意關鍵字</h6>
+                      <div className="flex flex-wrap gap-1.5">
+                        {(topic.seoGuidance?.semanticKeywords || []).map((keyword, i) => (
+                          <span key={i} className="px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-100 rounded text-xs font-medium">
                             {keyword}
                           </span>
                         ))}
                       </div>
                     </div>
                     
-                    <div>
-                      <h6 className="text-xs font-semibold text-gray-400 mb-1">內部連結</h6>
-                      <ul className="list-disc list-inside space-y-1 text-xs text-gray-300">
-                        {topic.seoGuidance.internalLinks.map((link, i) => (
-                          <li key={i}>{link}</li>
+                    <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/40">
+                      <h6 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">內部連結</h6>
+                      <ul className="list-disc list-inside space-y-1 text-xs text-slate-600">
+                        {(topic.seoGuidance?.internalLinks || []).map((link, i) => (
+                          <li key={i} className="font-mono">{link}</li>
                         ))}
                       </ul>
                     </div>
                     
-                    <div>
-                      <h6 className="text-xs font-semibold text-gray-400 mb-1">外部連結</h6>
-                      <ul className="list-disc list-inside space-y-1 text-xs text-gray-300">
-                        {topic.seoGuidance.externalLinks.map((link, i) => (
-                          <li key={i}>{link}</li>
+                    <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/40">
+                      <h6 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">外部連結</h6>
+                      <ul className="list-disc list-inside space-y-1 text-xs text-slate-600">
+                        {(topic.seoGuidance?.externalLinks || []).map((link, i) => (
+                          <li key={i} className="font-mono">{link}</li>
                         ))}
                       </ul>
                     </div>
                   </div>
                   
                   {/* 提示詞區塊 */}
-                  <div className="mt-4 pt-4 border-t border-white/10 space-y-4">
+                  <div className="mt-6 pt-6 border-t border-slate-200 space-y-6">
                     {/* AI Studio 提示詞 */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <h6 className="text-xs font-semibold text-gray-400">AI Studio 生成提示詞</h6>
-                          <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 text-[10px] font-bold rounded">React + Tailwind CSS</span>
+                    {strategy.aiStudioPrompts?.[idx] && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <h6 className="text-xs font-bold text-slate-500">AI Studio 生成提示詞</h6>
+                            <span className="px-2 py-0.5 bg-blue-50 border border-blue-200 text-blue-600 text-[10px] font-bold rounded-lg shadow-xs">React + Tailwind CSS</span>
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(strategy.aiStudioPrompts[idx], idx, 'aiStudio')}
+                            className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-colors flex items-center gap-1 shadow-xs ${
+                              copiedPrompt?.index === idx && copiedPrompt?.type === 'aiStudio' 
+                                ? 'bg-green-50 text-green-700 border-green-200' 
+                                : 'bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200 border-slate-200'
+                            }`}
+                          >
+                            {copiedPrompt?.index === idx && copiedPrompt?.type === 'aiStudio' ? (
+                              <>
+                                <Check className="w-3 h-3" />
+                                <span>已複製！</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>複製提示詞</span>
+                              </>
+                            )}
+                          </button>
                         </div>
-                        <button
-                          onClick={() => copyToClipboard(strategy.aiStudioPrompts[idx], idx, 'aiStudio')}
-                          className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 rounded text-xs text-green-300 transition-colors"
-                        >
-                          {copiedPrompt?.index === idx && copiedPrompt?.type === 'aiStudio' ? '已複製！' : '複製提示詞'}
-                        </button>
+                        <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 shadow-inner">
+                          <pre className="text-xs text-slate-700 whitespace-pre-wrap font-mono leading-relaxed">
+                            {strategy.aiStudioPrompts[idx]}
+                          </pre>
+                        </div>
                       </div>
-                      <div className="bg-[#0a0a0d] rounded-lg p-4 border border-white/5">
-                        <pre className="text-xs text-gray-300 whitespace-pre-wrap font-mono">
-                          {strategy.aiStudioPrompts[idx]}
-                        </pre>
-                      </div>
-                    </div>
+                    )}
 
                     {/* Gamma.app 提示詞 */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <h6 className="text-xs font-semibold text-gray-400">Gamma.app 生成提示詞</h6>
-                          <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 text-[10px] font-bold rounded">簡報/網頁</span>
+                    {strategy.gammaPrompts?.[idx] && (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <h6 className="text-xs font-bold text-slate-500">Gamma.app 生成提示詞</h6>
+                            <span className="px-2 py-0.5 bg-pink-50 border border-pink-200 text-pink-600 text-[10px] font-bold rounded-lg shadow-xs">簡報/網頁</span>
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(strategy.gammaPrompts[idx], idx, 'gamma')}
+                            className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-colors flex items-center gap-1 shadow-xs ${
+                              copiedPrompt?.index === idx && copiedPrompt?.type === 'gamma' 
+                                ? 'bg-green-50 text-green-700 border-green-200' 
+                                : 'bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200 border-slate-200'
+                            }`}
+                          >
+                            {copiedPrompt?.index === idx && copiedPrompt?.type === 'gamma' ? (
+                              <>
+                                <Check className="w-3 h-3" />
+                                <span>已複製！</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>複製提示詞</span>
+                              </>
+                            )}
+                          </button>
                         </div>
-                        <button
-                          onClick={() => copyToClipboard(strategy.gammaPrompts[idx], idx, 'gamma')}
-                          className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 rounded text-xs text-green-300 transition-colors"
-                        >
-                          {copiedPrompt?.index === idx && copiedPrompt?.type === 'gamma' ? '已複製！' : '複製提示詞'}
-                        </button>
+                        <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 shadow-inner">
+                          <pre className="text-xs text-slate-700 whitespace-pre-wrap font-mono leading-relaxed">
+                            {strategy.gammaPrompts[idx]}
+                          </pre>
+                        </div>
                       </div>
-                      <div className="bg-[#0a0a0d] rounded-lg p-4 border border-white/5">
-                        <pre className="text-xs text-gray-300 whitespace-pre-wrap font-mono">
-                          {strategy.gammaPrompts[idx]}
-                        </pre>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -162,25 +203,25 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
       </div>
 
       {/* 互動元素建議 */}
-      <div className="mb-8 bg-[#15151a] rounded-xl p-6 border border-white/5">
-        <h4 className="text-lg font-bold text-white mb-4">互動元素建議</h4>
+      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+        <h4 className="text-lg font-bold text-slate-800 mb-4">互動元素建議</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {strategy.interactiveElements.map((element, idx) => (
-            <div key={idx} className="bg-[#1a1a1f] rounded-lg p-4 border border-white/5">
-              <h5 className="text-sm font-bold text-white mb-2">{element.type}</h5>
-              <p className="text-xs text-gray-300">{element.description}</p>
+          {(strategy.interactiveElements || []).map((element, idx) => (
+            <div key={idx} className="bg-slate-50 rounded-xl p-4 border border-slate-200/60">
+              <h5 className="text-sm font-bold text-slate-800 mb-2">{element.type}</h5>
+              <p className="text-xs text-slate-600 leading-relaxed">{element.description}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* CTA 建議 */}
-      <div className="mb-8 bg-[#15151a] rounded-xl p-6 border border-white/5">
-        <h4 className="text-lg font-bold text-white mb-4">行動呼籲文案建議</h4>
+      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+        <h4 className="text-lg font-bold text-slate-800 mb-4">行動呼籲文案建議</h4>
         <div className="flex flex-wrap gap-3">
-          {strategy.ctaSuggestions.map((cta, idx) => (
-            <div key={idx} className="px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-blue-500/30">
-              <p className="text-sm font-semibold text-white">{cta}</p>
+          {(strategy.ctaSuggestions || []).map((cta, idx) => (
+            <div key={idx} className="px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200/65 rounded-xl font-medium text-sm shadow-xs">
+              {cta}
             </div>
           ))}
         </div>

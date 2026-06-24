@@ -29,7 +29,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
         <div className="p-8">
           <div className="flex items-center space-x-4">
             <div className="h-8 w-1 bg-blue-600 rounded-full" />
-            <h2 className="text-3xl font-bold serif text-slate-800">功能導覽 v0.8</h2>
+            <h2 className="text-3xl font-bold text-slate-800">功能導覽 v0.8</h2>
           </div>
           <p className="text-slate-500 text-sm mb-8">從單圖分析到全套社群行銷素材的完整生產線。</p>
 

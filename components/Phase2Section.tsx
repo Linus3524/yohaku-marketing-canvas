@@ -45,7 +45,7 @@ export const Phase2Section: React.FC<Phase2SectionProps> = ({
           <div className="relative z-10 flex flex-col md:flex-row gap-8">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-2xl font-bold text-slate-800 serif flex-1">Phase 2: 全套內容生成</h3>
+                <h3 className="text-2xl font-bold text-slate-800 flex-1">Phase 2: 全套內容生成</h3>
                 <span className="px-2 py-0.5 bg-blue-600 text-white text-[10px] font-bold uppercase rounded">PRO</span>
                 {debugPromptAvailable && (
                   <button

@@ -22,7 +22,7 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
     <div className="w-full max-w-6xl mx-auto px-4 pb-20">
       <div className="mb-10">
         <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
-          <h3 className="text-xl font-bold text-slate-800 serif">Phase 4: 內容與 SEO 策略</h3>
+          <h3 className="text-xl font-bold text-slate-800">Phase 4: 內容與 SEO 策略</h3>
           {onDownload && (
             <button
               onClick={onDownload}

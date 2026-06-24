@@ -665,7 +665,7 @@ const App: React.FC = () => {
               <div className="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
                 v0.8
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 serif mb-3 leading-tight">
+              <h2 className="text-xl md:text-3xl font-bold text-slate-900 mb-3 leading-tight">
                 打造完整的品牌視覺與電商行銷資產
               </h2>
               <p className="text-slate-500 max-w-xl mx-auto mb-8 text-sm md:text-base leading-relaxed">

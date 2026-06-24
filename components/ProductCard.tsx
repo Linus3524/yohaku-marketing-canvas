@@ -19,7 +19,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ analysis, imageSrc }) 
       </div>
       <div className="flex flex-col justify-center w-full">
         <div className="uppercase tracking-widest text-xs text-blue-600 font-bold mb-2">分析報告</div>
-        <h2 className="text-3xl font-bold text-slate-800 serif mb-1">{analysis.name}</h2>
+        <h2 className="text-3xl font-bold text-slate-800 mb-1">{analysis.name}</h2>
         <p className="text-slate-500 text-sm mb-4 italic">{analysis.visual_description}</p>
         
         <div className="space-y-2">

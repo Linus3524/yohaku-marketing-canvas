@@ -331,7 +331,7 @@ export const ContentSuite: React.FC<ContentSuiteProps> = ({ plan, onPlanUpdate, 
         {/* Header & Mode Switch */}
         <div className="flex flex-col mb-8 gap-4 border-b border-slate-200 pb-6">
             <div>
-                <h2 className="text-2xl font-bold text-slate-800 serif mb-1 font-semibold">
+                <h2 className="text-2xl font-bold text-slate-800 mb-1 font-semibold">
                     {plan.plan_name}
                 </h2>
                 <p className="text-slate-500 text-sm">Content Suite Plan ({items.length} Assets)</p>

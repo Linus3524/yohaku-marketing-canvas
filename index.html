@@ -3,24 +3,96 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YOHAKU 電商設計大師 v0.8</title>
+    <title>YOHAKU - 電商行銷資產建構器</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
       body {
-        background-color: #f5f5f7; /* Light Apple background */
-        color: #1d1d1f; /* Apple dark charcoal text */
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        background-color: #f8fafc; /* 極淡的冷灰色，營造專業感 */
+        color: #0f172a;
+        -webkit-font-smoothing: antialiased;
       }
-      .serif {
-        font-family: 'Playfair Display', serif;
+
+      /* 隱藏捲軸但保持可滾動 */
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* 頂級玻璃質感卡片 */
+      .premium-card {
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+        border-radius: 20px;
+        transition: all 0.3s ease;
       }
+      .premium-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -4px rgba(0, 0, 0, 0.02);
+        border-color: rgba(203, 213, 225, 1);
+      }
+
+      /* 現代化表單輸入框 */
+      .modern-input {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 14px;
+        color: #1e293b;
+        width: 100%;
+        transition: all 0.2s ease;
+      }
+      .modern-input:focus {
+        outline: none;
+        background: #ffffff;
+        border-color: #818cf8;
+        box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+      }
+      .modern-input::placeholder { color: #94a3b8; }
+
+      /* 上傳區塊微交互 */
+      .upload-zone {
+        background: #f8fafc;
+        border: 2px dashed #cbd5e1;
+        border-radius: 16px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+      .upload-zone:hover {
+        background: #f1f5f9;
+        border-color: #818cf8;
+      }
+
+      /* 標籤小標題 (全大寫、增加字距) */
+      .micro-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      /* 時間軸連線 */
+      .timeline-line {
+        position: absolute;
+        left: 24px;
+        top: 48px;
+        bottom: -48px;
+        width: 2px;
+        background: #e2e8f0;
+        z-index: 0;
+      }
+      /* 最後一個步驟不需要往下連線 */
+      .step-container:last-child .timeline-line { display: none; }
+
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #f5f5f7; 
+        background: #f8fafc; 
       }
       ::-webkit-scrollbar-thumb {
         background: #c1c1c1; 

@@ -6,7 +6,6 @@ import { ApiKeyModal } from './components/ApiKeyModal';
 import { ProductCard } from './components/ProductCard';
 import { PromptCard } from './components/PromptCard';
 import { ErrorBanner } from './components/ErrorBanner';
-import { LoadingOverlay } from './components/LoadingOverlay';
 import { InputForm } from './components/InputForm';
 import { Phase2Section } from './components/Phase2Section';
 import { Phase3Section } from './components/Phase3Section';
@@ -16,14 +15,14 @@ import { DebugPromptModal } from './components/DebugPromptModal';
 import { LockedPhaseCard } from './components/LockedPhaseCard';
 import { AppError, ErrorType } from './utils/errorHandler';
 import { validateProductName, validateBrandContext, validateRefCopy } from './utils/validators';
-import { LanguageMode, getLanguageMode, setLanguageMode, isChineseMode } from './utils/languageMode';
+import { LanguageMode, getLanguageMode, setLanguageMode } from './utils/languageMode';
 import { generateImageDescriptionMap } from './utils/imageMapping';
 import { generateFileNameMap } from './utils/imageNaming';
 import { generatePhase1Report, generatePhase3Report, generatePhase4Report } from './utils/reportGenerator';
 import { generateFullReport } from './services/geminiService';
 import { downloadTextFile } from './utils/downloadHelper';
 import { FILE_LIMITS } from './utils/constants';
-import { FileText, Download, Lock, Sparkles, Search, Globe, Users, Copy, Layout, CheckCircle, ArrowRight, Star } from 'lucide-react';
+import { FileText, Globe, Users, Layout } from 'lucide-react';
 
 // --- High-Fidelity Mock UI Previews for Locked Phases ---
 
@@ -448,11 +447,6 @@ const App: React.FC = () => {
   };
 
   // --- Phase visibility checks ---
-  const isPhaseResultsVisible = appState === AppState.RESULTS || appState === AppState.PLANNING ||
-    appState === AppState.SUITE_READY || appState === AppState.ANALYZING_MARKET ||
-    appState === AppState.MARKET_READY || appState === AppState.ANALYZING_CONTENT ||
-    appState === AppState.CONTENT_READY;
-
   const isPhase3Visible = (appState === AppState.SUITE_READY || appState === AppState.ANALYZING_MARKET ||
     appState === AppState.MARKET_READY || appState === AppState.ANALYZING_CONTENT ||
     appState === AppState.CONTENT_READY) && contentPlan;
@@ -462,238 +456,73 @@ const App: React.FC = () => {
 
   const isPhase5Visible = appState === AppState.CONTENT_READY && contentStrategy;
 
-  // --- Render Phase 1 Results ---
-  const renderPhase1Results = () => {
-    if (!analysisResult || !imagePreview) return null;
-    const activeRoute = analysisResult.marketing_routes[activeRouteIndex];
-
-    return (
-      <div className="w-full max-w-6xl mx-auto px-4 pb-20">
-        <ProductCard analysis={analysisResult.product_analysis} imageSrc={imagePreview} />
-
-        {/* Route Selection */}
-        <div className="mb-10">
-          <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">1</div>
-              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 flex-1">
-                Phase 1: 視覺策略選擇 / Select Concept
-              </h2>
-              {analysisResult?._debugPrompt && (
-                <button
-                  onClick={() => setDebugModalPhase(1)}
-                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-colors flex items-center gap-1 border border-slate-200"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  檢視提示詞
-                </button>
-              )}
-            </div>
-            <button
-              onClick={handleDownloadPhase1Report}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 shadow-sm"
-            >
-              <Download className="w-4 h-4" />
-              下載策略報告
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {analysisResult.marketing_routes.map((route, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleRouteChange(idx)}
-                className={`p-4 rounded-xl border text-left transition-all duration-300 ${activeRouteIndex === idx
-                    ? 'bg-white text-slate-900 border-slate-300 shadow-sm scale-[1.02]'
-                    : 'bg-white/60 text-slate-500 border-slate-200/50 hover:bg-white hover:text-slate-800'
-                  }`}
-              >
-                <div className="text-xs font-bold uppercase opacity-70">Route {String.fromCharCode(65 + idx)}</div>
-                <div className="font-bold text-lg">{route.route_name}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Phase 1 Concept Posters */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {activeRoute.image_prompts.map((promptItem, idx) => (
-            <PromptCard 
-              key={`p1-${activeRouteIndex}-${idx}`} 
-              data={promptItem} 
-              index={idx} 
-              defaultRefImage={imagePreview || undefined}
-            />
-          ))}
-        </div>
-
-        {/* Phase 2 */}
-        <Phase2Section
-          activeRoute={activeRoute}
-          refCopy={refCopy}
-          inputErrors={inputErrors}
-          appState={appState}
-          contentPlan={contentPlan}
-          productImageBase64={imagePreview || undefined}
-          onRefCopyChange={(val) => {
-            setRefCopy(val);
-            if (inputErrors.refCopy) setInputErrors({ ...inputErrors, refCopy: undefined });
-          }}
-          onGeneratePlan={handleGeneratePlan}
-          onPlanUpdate={(newItems) => setEditedPlanItems(newItems)}
-          onDownloadReport={handleDownloadReport}
-          onImagesGenerated={(images) => setPhase2GeneratedImages(images)}
-          onOpenDebug={() => setDebugModalPhase(2)}
-          debugPromptAvailable={!!contentPlan?._debugPrompt}
-        />
-
-        {/* Phase 3 */}
-        {isPhase3Visible ? (
-          <Phase3Section
-            appState={appState}
-            marketAnalysis={marketAnalysis}
-            onGenerateMarketAnalysis={handleGenerateMarketAnalysis}
-            onOpenDebug={() => setDebugModalPhase(3)}
-            debugPromptAvailable={!!marketAnalysis?._debugPrompt}
-            productName={productName}
-            region={marketRegion}
-            onRegionChange={setMarketRegion}
-            onDownloadPhase3Report={handleDownloadPhase3Report}
-          />
-        ) : (
-          <LockedPhaseCard
-            phaseNumber={3}
-            title="本地市場定位與競品分析"
-            description="採用即時 Google 搜尋檢索特定市場的競品動態，解讀在地文化洞察，明確產品核心優勢與買家人物誌（Buyer Persona）。"
-            isLoading={appState === AppState.ANALYZING_MARKET}
-            loadingMessage="正在透過 Google Search 檢索並分析本地市場數據..."
-            previewContent={<Phase3Preview />}
-          />
-        )}
-
-        {/* Phase 4 */}
-        {isPhase4Visible ? (
-          <Phase4Section
-            appState={appState}
-            contentStrategy={contentStrategy}
-            onGenerateContentStrategy={handleGenerateContentStrategy}
-            onOpenDebug={() => setDebugModalPhase(4)}
-            debugPromptAvailable={!!contentStrategy?._debugPrompt}
-            productName={productName}
-            onDownloadPhase4Report={handleDownloadPhase4Report}
-          />
-        ) : (
-          <LockedPhaseCard
-            phaseNumber={4}
-            title="內容行銷與 SEO 優化"
-            description="基於市場分析結果，生成 3 個行銷內容主題、長尾關鍵字佈局、互動元素建議、以及網頁生成（React + Tailwind）和簡報製作（Gamma.app）的提示詞。"
-            isLoading={appState === AppState.ANALYZING_CONTENT}
-            loadingMessage="正在生成專業內容策略與 SEO 優化方案..."
-            previewContent={<Phase4Preview />}
-          />
-        )}
-
-        {/* Phase 5 */}
-        {isPhase5Visible ? (
-          <Phase5Section
-            productName={productName}
-          />
-        ) : (
-          <LockedPhaseCard
-            phaseNumber={5}
-            title="電商 Landing Page 生成 (Ultra 限定)"
-            description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
-            previewContent={<Phase5Preview />}
-          />
-        )}
-      </div>
-    );
-  };
-
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-slate-800 selection:bg-blue-500 selection:text-white font-sans flex flex-col">
+    <div className="min-h-screen bg-[#f8fafc] text-[#0f172a] selection:bg-indigo-500 selection:text-white flex flex-col">
       <GuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
       <ApiKeyModal isOpen={isKeyModalOpen} onSave={(key: string) => { setIsKeyModalOpen(false); setHasKey(true); }} />
 
       {/* Header */}
-      <header className="w-full py-4 border-b border-slate-200/50 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setAppState(AppState.IDLE)}>
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/10">
-              <span className="text-white font-bold">YH</span>
-            </div>
-            <h1 className="text-lg font-bold text-slate-800 hidden md:block">
-              YOHAKU 電商設計大師 <span className="text-blue-600 text-xs align-top ml-1">PRO</span>
-            </h1>
-          </div>
-          <div className="flex gap-4 items-center">
-            <button onClick={() => setIsGuideOpen(true)} className="text-slate-500 hover:text-slate-800 text-sm font-medium transition-colors">功能導覽 v0.8</button>
-
-            {/* Language Mode Switcher */}
-            <div className="flex items-center gap-2 bg-slate-200/50 rounded-lg p-1 border border-slate-200/40">
-              <button
-                onClick={() => handleLanguageModeChange(LanguageMode.ZH_TW)}
-                className={`px-3 py-1 rounded text-xs font-bold transition-colors ${languageMode === LanguageMode.ZH_TW ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-slate-800'}`}
-              >
-                繁體中文
-              </button>
-              <button
-                onClick={() => handleLanguageModeChange(LanguageMode.EN)}
-                disabled
-                className={`px-3 py-1 rounded text-xs font-bold transition-colors relative ${languageMode === LanguageMode.EN ? 'bg-blue-600 text-white' : 'text-slate-400 cursor-not-allowed opacity-50'}`}
-                title="英文模式開發中"
-              >
-                英文
-                <span className="absolute -top-1 -right-1 bg-yellow-500 text-[8px] text-black font-bold px-1 rounded">開發中</span>
-              </button>
-            </div>
-
-            <button onClick={() => setIsKeyModalOpen(true)} className="text-blue-600 hover:text-blue-500 text-sm font-bold">
-              {hasKey ? '更換 API Key' : '設定 API Key'}
-            </button>
-          </div>
+      <header className="h-14 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 flex items-center justify-between px-6">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={handleReset}>
+          <div className="w-6 h-6 bg-indigo-600 rounded flex items-center justify-center text-white font-bold text-xs">Y</div>
+          <span className="font-semibold text-sm tracking-wide text-slate-800">YOHAKU 電商行銷大師</span>
+        </div>
+        <div className="flex items-center gap-4 text-sm font-medium">
+          <button onClick={() => setIsGuideOpen(true)} className="text-slate-500 hover:text-slate-800 text-xs font-semibold bg-transparent border-0 cursor-pointer">功能導覽 v0.8</button>
+          
+          {/* API key settings */}
+          <button onClick={() => setIsKeyModalOpen(true)} className="text-indigo-600 hover:text-indigo-500 text-xs font-semibold bg-transparent border-0 cursor-pointer">
+            {hasKey ? '更換 API Key' : '設定 API Key'}
+          </button>
+          
+          <button className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition text-xs font-bold shadow-xs cursor-pointer">
+            升級 Pro
+          </button>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 flex-1 flex flex-col">
+      <main className="max-w-5xl mx-auto py-12 px-6 flex-1 flex flex-col w-full">
         {/* Global Error */}
         <ErrorBanner errorMsg={errorMsg} errorType={errorType} onReset={handleReset} />
 
+        {/* Hero: 專案核心設定區 */}
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold tracking-widest rounded-full uppercase border border-indigo-100 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span> Engine Ready
+          </span>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-3">打造完整的品牌視覺與行銷資產</h1>
+          <p className="text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
+            輸入產品基礎資訊，系統將自動為您生成一體化的行銷圖片、社群貼文、精準定位與 SEO 文案。
+          </p>
+        </div>
+
         {/* 頂部產品資料卡片 */}
-        <div className="w-full max-w-4xl mx-auto mb-8 bg-white/70 rounded-3xl p-8 border border-slate-200/50 backdrop-blur-md shadow-sm">
+        <div className="premium-card p-8 mb-16 relative overflow-hidden text-left">
+          {/* 裝飾性背景光暈 */}
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
+
           {!analysisResult ? (
-            <div className="text-center">
-              <div className="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
-                v0.8
-              </div>
-              <h2 className="text-xl md:text-3xl font-bold text-slate-900 mb-3 leading-tight">
-                打造完整的品牌視覺與電商行銷資產
-              </h2>
-              <p className="text-slate-500 max-w-xl mx-auto mb-8 text-sm md:text-base leading-relaxed">
-                結合產品識別、品牌故事與競品策略。一鍵分析解鎖<br />
-                視覺策略定位、社群行銷套圖企劃、本地市場分析與內容 SEO 方案。
-              </p>
-              <InputForm
-                productName={productName}
-                brandContext={brandContext}
-                selectedFile={selectedFile}
-                imagePreview={imagePreview}
-                inputErrors={inputErrors}
-                appState={appState}
-                onProductNameChange={(val) => {
-                  setProductName(val);
-                  if (inputErrors.productName) setInputErrors({ ...inputErrors, productName: undefined });
-                }}
-                onBrandContextChange={(val) => {
-                  setBrandContext(val);
-                  if (inputErrors.brandContext) setInputErrors({ ...inputErrors, brandContext: undefined });
-                }}
-                onFileChange={handleFileChange}
-                onAnalyze={handleAnalyze}
-              />
-            </div>
+            <InputForm
+              productName={productName}
+              brandContext={brandContext}
+              selectedFile={selectedFile}
+              imagePreview={imagePreview}
+              inputErrors={inputErrors}
+              appState={appState}
+              onProductNameChange={(val) => {
+                setProductName(val);
+                if (inputErrors.productName) setInputErrors({ ...inputErrors, productName: undefined });
+              }}
+              onBrandContextChange={(val) => {
+                setBrandContext(val);
+                if (inputErrors.brandContext) setInputErrors({ ...inputErrors, brandContext: undefined });
+              }}
+              onFileChange={handleFileChange}
+              onAnalyze={handleAnalyze}
+            />
           ) : (
             <div>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                 <div className="flex items-center gap-4">
                   {imagePreview && (
                     <img src={imagePreview} alt="Preview" className="w-14 h-14 object-contain bg-white border border-slate-200/60 rounded-2xl p-1.5 shadow-xs" />
@@ -706,14 +535,14 @@ const App: React.FC = () => {
                 
                 <button
                   onClick={() => setIsInputExpanded(!isInputExpanded)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200/85 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 transition-colors shadow-xs self-start sm:self-auto"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200/85 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 transition-colors shadow-xs self-start sm:self-auto cursor-pointer"
                 >
                   {isInputExpanded ? '收起產品資料' : '編輯產品資料'}
                 </button>
               </div>
 
               {isInputExpanded && (
-                <div className="mt-6 pt-6 border-t border-slate-200/60">
+                <div className="mt-6 pt-6 border-t border-slate-200/60 relative z-10">
                   <InputForm
                     productName={productName}
                     brandContext={brandContext}
@@ -735,7 +564,7 @@ const App: React.FC = () => {
                   <div className="mt-6 flex justify-end">
                     <button
                       onClick={handleAnalyze}
-                      className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-blue-500/10"
+                      className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-indigo-500/10 cursor-pointer"
                     >
                       重新執行 AI 分析
                     </button>
@@ -746,61 +575,209 @@ const App: React.FC = () => {
           )}
         </div>
 
-        {/* 5 階段工作流看板 (5-Phase Workflow Board) */}
-        
-        {/* Phase 1: 視覺策略定位 */}
-        {analysisResult && imagePreview ? (
-          renderPhase1Results()
-        ) : (
-          <LockedPhaseCard
-            phaseNumber={1}
-            title="視覺策略定位"
-            description="分析上傳的產品圖片與品牌背景，AI 總監將自動生成 3 條不同的視覺策略路線，包含主標題、副標題、風格簡報與配圖繪圖提示詞。"
-            isLoading={appState === AppState.ANALYZING}
-            loadingMessage="AI 總監正在分析產品，解讀品牌視覺特徵與商業語意..."
-            previewContent={<Phase1Preview />}
-          />
-        )}
+        {/* 垂直工作流區域 (Timeline) */}
+        <div className="relative space-y-8">
+          
+          {/* Step 1 */}
+          <div className="step-container relative pl-16">
+            <div className="timeline-line"></div>
+            <div className={`absolute left-0 top-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-[0_0_0_4px_rgba(255,255,255,1)] z-10 ${
+              analysisResult ? 'bg-white border-2 border-indigo-500 text-indigo-600' : 'bg-slate-50 border-2 border-slate-200 text-slate-400'
+            }`}>1</div>
 
-        {/* Phase 2: 社群行銷套圖企劃 */}
-        {!analysisResult && (
-          <LockedPhaseCard
-            phaseNumber={2}
-            title="社群行銷套圖企劃"
-            description="依據選定的視覺路線，一鍵規劃並生成包含 8 張社群行銷套圖的完整腳本（主圖、情境圖、痛點圖、特色圖等）與相應的英文繪圖提示詞。"
-            previewContent={<Phase2Preview />}
-          />
-        )}
+            {analysisResult && imagePreview ? (
+              <div className="premium-card p-6 flex flex-col gap-6 text-left">
+                <ProductCard analysis={analysisResult.product_analysis} imageSrc={imagePreview} />
 
-        {/* Phase 3: 本地市場定位與競品分析 */}
-        {!analysisResult && (
-          <LockedPhaseCard
-            phaseNumber={3}
-            title="本地市場分析與定位"
-            description="採用即時 Google 搜尋檢索特定市場的競品動態，解讀在地文化洞察，明確產品核心優勢與買家人物誌（Buyer Persona）。"
-            previewContent={<Phase3Preview />}
-          />
-        )}
+                {/* Route Selection */}
+                <div className="mb-4">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
+                    <div>
+                      <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        視覺資產生成
+                        <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] rounded font-medium border border-indigo-100">已解鎖</span>
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-1">請選擇視覺策略路線以規劃對應的社群貼圖與行銷內容。</p>
+                    </div>
+                    <div className="flex gap-2 self-start md:self-auto">
+                      {analysisResult?._debugPrompt && (
+                        <button
+                          onClick={() => setDebugModalPhase(1)}
+                          className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-colors flex items-center gap-1 border border-slate-200 cursor-pointer font-medium"
+                        >
+                          檢視提示詞
+                        </button>
+                      )}
+                      <button
+                        onClick={handleDownloadPhase1Report}
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+                      >
+                        下載策略報告
+                      </button>
+                    </div>
+                  </div>
 
-        {/* Phase 4: 內容行銷與 SEO 優化 */}
-        {!analysisResult && (
-          <LockedPhaseCard
-            phaseNumber={4}
-            title="內容行銷與 SEO 優化"
-            description="基於市場分析結果，生成 3 個行銷內容主題、長尾關鍵字佈局、互動元素建議、以及網頁生成（React + Tailwind）和簡報製作（Gamma.app）的提示詞。"
-            previewContent={<Phase4Preview />}
-          />
-        )}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {analysisResult.marketing_routes.map((route, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleRouteChange(idx)}
+                        className={`p-4 rounded-xl border text-left transition-all duration-300 cursor-pointer ${
+                          activeRouteIndex === idx
+                            ? 'bg-white text-slate-900 border-indigo-500 shadow-[0_0_0_1px_rgba(99,102,241,0.5)] scale-[1.02]'
+                            : 'bg-white/60 text-slate-500 border-slate-200/50 hover:bg-white hover:text-slate-800'
+                        }`}
+                      >
+                        <div className="text-[10px] font-bold uppercase opacity-70 tracking-wider">Route {String.fromCharCode(65 + idx)}</div>
+                        <div className="font-bold text-sm mt-1">{route.route_name}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-        {/* Phase 5: 電商 Landing Page 生成 (Ultra 限定) */}
-        {!analysisResult && (
-          <LockedPhaseCard
-            phaseNumber={5}
-            title="電商 Landing Page 生成 (Ultra 限定)"
-            description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
-            previewContent={<Phase5Preview />}
-          />
-        )}
+                {/* Concept Posters Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {analysisResult.marketing_routes[activeRouteIndex].image_prompts.map((promptItem, idx) => (
+                    <PromptCard 
+                      key={`p1-${activeRouteIndex}-${idx}`} 
+                      data={promptItem} 
+                      index={idx} 
+                      defaultRefImage={imagePreview || undefined}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <LockedPhaseCard
+                phaseNumber={1}
+                title="視覺策略定位"
+                description="分析上傳的產品圖片與品牌背景，AI 總監將自動生成 3 條不同的視覺策略路線，包含風格簡報與配圖繪圖提示詞。"
+                isLoading={appState === AppState.ANALYZING}
+                loadingMessage="AI 總監正在分析產品，解讀品牌視覺特徵與商業語意..."
+                previewContent={<Phase1Preview />}
+              />
+            )}
+          </div>
+
+          {/* Step 2 */}
+          <div className="step-container relative pl-16">
+            <div className="timeline-line"></div>
+            <div className={`absolute left-0 top-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-[0_0_0_4px_rgba(255,255,255,1)] z-10 ${
+              contentPlan ? 'bg-white border-2 border-indigo-500 text-indigo-600' : 'bg-slate-50 border-2 border-slate-200 text-slate-400'
+            }`}>2</div>
+
+            {analysisResult && imagePreview ? (
+              <Phase2Section
+                activeRoute={analysisResult.marketing_routes[activeRouteIndex]}
+                refCopy={refCopy}
+                inputErrors={inputErrors}
+                appState={appState}
+                contentPlan={contentPlan}
+                productImageBase64={imagePreview}
+                onRefCopyChange={(val) => {
+                  setRefCopy(val);
+                  if (inputErrors.refCopy) setInputErrors({ ...inputErrors, refCopy: undefined });
+                }}
+                onGeneratePlan={handleGeneratePlan}
+                onPlanUpdate={(newItems) => setEditedPlanItems(newItems)}
+                onDownloadReport={handleDownloadReport}
+                onImagesGenerated={(images) => setPhase2GeneratedImages(images)}
+                onOpenDebug={() => setDebugModalPhase(2)}
+                debugPromptAvailable={!!contentPlan?._debugPrompt}
+              />
+            ) : (
+              <LockedPhaseCard
+                phaseNumber={2}
+                title="社群行銷套圖企劃"
+                description="依據選定的視覺路線，一鍵規劃並生成包含 8 張社群行銷套圖的完整腳本（主圖、情境圖、痛點圖、特色圖等）與相應的英文繪圖提示詞。"
+                previewContent={<Phase2Preview />}
+              />
+            )}
+          </div>
+
+          {/* Step 3 */}
+          <div className="step-container relative pl-16">
+            <div className="timeline-line"></div>
+            <div className={`absolute left-0 top-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-[0_0_0_4px_rgba(255,255,255,1)] z-10 ${
+              marketAnalysis ? 'bg-white border-2 border-indigo-500 text-indigo-600' : 'bg-slate-50 border-2 border-slate-200 text-slate-400'
+            }`}>3</div>
+
+            {isPhase3Visible ? (
+              <Phase3Section
+                appState={appState}
+                marketAnalysis={marketAnalysis}
+                onGenerateMarketAnalysis={handleGenerateMarketAnalysis}
+                onOpenDebug={() => setDebugModalPhase(3)}
+                debugPromptAvailable={!!marketAnalysis?._debugPrompt}
+                productName={productName}
+                region={marketRegion}
+                onRegionChange={setMarketRegion}
+                onDownloadPhase3Report={handleDownloadPhase3Report}
+              />
+            ) : (
+              <LockedPhaseCard
+                phaseNumber={3}
+                title="本地市場與客群定位"
+                description="採用即時 Google 搜尋檢索特定市場的競品動態，解讀在地文化洞察，明確產品核心優勢與買家人物誌（Buyer Persona）。"
+                isLoading={appState === AppState.ANALYZING_MARKET}
+                loadingMessage="正在透過 Google Search 檢索並分析本地市場數據..."
+                previewContent={<Phase3Preview />}
+              />
+            )}
+          </div>
+
+          {/* Step 4 */}
+          <div className="step-container relative pl-16">
+            <div className="timeline-line"></div>
+            <div className={`absolute left-0 top-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-[0_0_0_4px_rgba(255,255,255,1)] z-10 ${
+              contentStrategy ? 'bg-white border-2 border-indigo-500 text-indigo-600' : 'bg-slate-50 border-2 border-slate-200 text-slate-400'
+            }`}>4</div>
+
+            {isPhase4Visible ? (
+              <Phase4Section
+                appState={appState}
+                contentStrategy={contentStrategy}
+                onGenerateContentStrategy={handleGenerateContentStrategy}
+                onOpenDebug={() => setDebugModalPhase(4)}
+                debugPromptAvailable={!!contentStrategy?._debugPrompt}
+                productName={productName}
+                onDownloadPhase4Report={handleDownloadPhase4Report}
+              />
+            ) : (
+              <LockedPhaseCard
+                phaseNumber={4}
+                title="內容行銷與 SEO 優化"
+                description="基於市場分析結果，生成 3 個行銷內容主題、長尾關鍵字佈局、互動元素建議、以及網頁生成（React + Tailwind）和簡報製作（Gamma.app）的提示詞。"
+                isLoading={appState === AppState.ANALYZING_CONTENT}
+                loadingMessage="正在生成專業內容策略與 SEO 優化方案..."
+                previewContent={<Phase4Preview />}
+              />
+            )}
+          </div>
+
+          {/* Step 5 */}
+          <div className="step-container relative pl-16">
+            <div className="timeline-line"></div>
+            <div className={`absolute left-0 top-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-[0_0_0_4px_rgba(255,255,255,1)] z-10 ${
+              isPhase5Visible ? 'bg-white border-2 border-indigo-500 text-indigo-600' : 'bg-slate-50 border-2 border-slate-200 text-slate-400'
+            }`}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="mx-auto mt-2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+
+            {isPhase5Visible ? (
+              <Phase5Section
+                productName={productName}
+              />
+            ) : (
+              <LockedPhaseCard
+                phaseNumber={5}
+                title="電商 Landing Page 生成 (Ultra 限定)"
+                description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
+                previewContent={<Phase5Preview />}
+              />
+            )}
+          </div>
+        </div>
       </main>
 
       <footer className="w-full py-6 text-center border-t border-slate-200/50 text-xs text-slate-400">

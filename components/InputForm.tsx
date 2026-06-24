@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppState } from '../types';
-import { Upload, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import { Upload, ArrowRight } from 'lucide-react';
 
 interface InputFormProps {
   productName: string;
@@ -27,58 +27,61 @@ export const InputForm: React.FC<InputFormProps> = ({
   onFileChange,
   onAnalyze,
 }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    {/* Left: Image Upload */}
-    <div className="order-2 md:order-1">
-      <label
-        className={`flex flex-col items-center justify-center w-full h-44 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedFile ? 'border-blue-500 bg-white shadow-sm' : 'border-slate-300 bg-white/50 hover:border-blue-500 hover:bg-white shadow-sm'
-          }`}
-      >
+  <div className="grid grid-cols-1 md:grid-cols-5 gap-8 relative z-10 w-full text-left">
+    {/* Left: Image Upload (col-span-2) */}
+    <div className="col-span-1 md:col-span-2 flex flex-col">
+      <label className="micro-label">商品主視覺圖片</label>
+      <label className="block w-full">
         {imagePreview ? (
-          <div className="w-full h-full relative group">
+          <div className="upload-zone h-48 flex items-center justify-center relative overflow-hidden group">
             <img src={imagePreview} alt="Preview" className="w-full h-full object-contain p-4" />
             <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="text-white font-medium flex items-center gap-2">
+              <span className="text-white text-sm font-medium flex items-center gap-2">
                 <Upload className="w-4 h-4" />
                 更換圖片
               </span>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-            <ImageIcon className="w-10 h-10 mb-3 text-slate-400" />
-            <p className="mb-2 text-sm text-slate-600 font-medium">上傳產品圖片</p>
-            <p className="text-xs text-slate-400">支援 JPG, PNG</p>
+          <div className="upload-zone h-48 flex flex-col items-center justify-center text-slate-400 group">
+            <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="text-indigo-500">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <span className="text-sm font-medium text-slate-700">拖曳或點擊上傳圖片</span>
+            <span className="text-[11px] mt-1 opacity-70">支援 JPG, PNG, WEBP (最大 5MB)</span>
           </div>
         )}
         <input type="file" className="hidden" onChange={onFileChange} accept="image/*" />
       </label>
     </div>
 
-    {/* Right: Text Inputs */}
-    <div className="order-1 md:order-2 flex flex-col gap-4">
+    {/* Right: Text Inputs (col-span-3) */}
+    <div className="col-span-1 md:col-span-3 flex flex-col gap-5 justify-between">
       <div>
-        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">1. 產品名稱 (Product Name)</label>
+        <label className="micro-label">1. 產品名稱 (Product Name)</label>
         <input
           type="text"
           value={productName}
           onChange={(e) => onProductNameChange(e.target.value)}
-          placeholder="例如：Sony WH-1000XM5, Aesop 洗手乳..."
-          className={`w-full bg-white border rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none transition-colors shadow-sm focus:ring-1 focus:ring-blue-500 ${inputErrors.productName ? 'border-red-500' : 'border-slate-200 focus:border-blue-500'
-            }`}
+          placeholder="例如：Sony WH-1000XM5 無線降噪耳機"
+          className={`modern-input ${inputErrors.productName ? 'border-red-500 focus:border-red-500' : ''}`}
         />
         {inputErrors.productName && (
           <p className="text-red-500 text-xs mt-1">{inputErrors.productName}</p>
         )}
       </div>
-      <div>
-        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">2. 品牌資訊 / 背景 (Context)</label>
+      
+      <div className="flex-1 flex flex-col">
+        <label className="micro-label">2. 核心特點 / 描述 (Context)</label>
         <textarea
           value={brandContext}
           onChange={(e) => onBrandContextChange(e.target.value)}
-          placeholder="可輸入品牌官網網址(AI會分析網址文字) 或直接貼上品牌故事、核心價值..."
-          className={`w-full bg-white border rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none transition-colors h-20 resize-none text-sm leading-relaxed shadow-sm focus:ring-1 focus:ring-blue-500 ${inputErrors.brandContext ? 'border-red-500' : 'border-slate-200 focus:border-blue-500'
-            }`}
+          placeholder="描述產品的核心賣點、目標受眾或設計理念。AI 將以此為基礎生成所有文案..."
+          className={`modern-input h-24 resize-none flex-1 ${inputErrors.brandContext ? 'border-red-500 focus:border-red-500' : ''}`}
         />
         {inputErrors.brandContext && (
           <p className="text-red-500 text-xs mt-1">{inputErrors.brandContext}</p>
@@ -88,7 +91,7 @@ export const InputForm: React.FC<InputFormProps> = ({
       {selectedFile && appState === AppState.IDLE && (
         <button
           onClick={onAnalyze}
-          className="mt-auto w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm uppercase tracking-widest rounded-xl hover:opacity-95 transition-opacity shadow-md shadow-blue-500/10 flex items-center justify-center gap-2"
+          className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
         >
           <span>開始 AI 分析</span>
           <ArrowRight className="w-4 h-4" />

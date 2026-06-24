@@ -35,7 +35,7 @@ export const DebugPromptModal: React.FC<DebugPromptModalProps> = ({ isOpen, prom
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-slate-200/60">
           <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-            <Terminal className="w-5 h-5 text-blue-600" />
+            <Terminal className="w-5 h-5 text-indigo-600" />
             {phaseName} 生成提示詞 Debug
           </h3>
           <div className="flex items-center gap-2">

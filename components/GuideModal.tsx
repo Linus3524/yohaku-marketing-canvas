@@ -28,7 +28,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
 
         <div className="p-8">
           <div className="flex items-center space-x-4">
-            <div className="h-8 w-1 bg-blue-600 rounded-full" />
+            <div className="h-8 w-1 bg-indigo-600 rounded-full" />
             <h2 className="text-3xl font-bold text-slate-800">功能導覽 v0.8</h2>
           </div>
           <p className="text-slate-500 text-sm mb-8">從單圖分析到全套社群行銷素材的完整生產線。</p>
@@ -36,7 +36,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
           <div className="space-y-8">
             {/* Step 1 */}
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200">1</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg border border-indigo-200">1</div>
               <div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">強化輸入 (Enhanced Input)</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -47,7 +47,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
 
             {/* Step 2 */}
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200">2</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg border border-indigo-200">2</div>
               <div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">Phase 1: 策略制定</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -58,7 +58,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
 
             {/* Step 3 */}
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200">3</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg border border-indigo-200">3</div>
               <div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">Phase 2: 全套內容企劃 (Content Suite)</h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-2">
@@ -73,7 +73,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
 
             {/* Step 4 */}
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200">4</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg border border-indigo-200">4</div>
               <div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">審閱與製作 (Review & Production)</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -86,7 +86,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
 
             {/* Step 5 */}
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200">5</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg border border-indigo-200">5</div>
               <div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">Phase 3: 產品市場分析</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
@@ -97,7 +97,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
 
             {/* Step 6 */}
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200">6</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg border border-indigo-200">6</div>
               <div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">Phase 4: 內容與 SEO 策略</h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-2">

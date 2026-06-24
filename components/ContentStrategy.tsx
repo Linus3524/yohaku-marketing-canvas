@@ -19,14 +19,14 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 pb-20">
+    <div className="w-full text-left">
       <div className="mb-10">
         <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
           <h3 className="text-xl font-bold text-slate-800">Phase 4: 內容與 SEO 策略</h3>
           {onDownload && (
             <button
               onClick={onDownload}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 shadow-sm"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-2 shadow-sm cursor-pointer"
             >
               <Download className="w-4 h-4" />
               下載策略報告
@@ -40,14 +40,14 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
         <h4 className="text-lg font-bold text-slate-800 mb-4">內容主題</h4>
         <div className="space-y-4">
           {(strategy.contentTopics || []).map((topic, idx) => (
-            <div key={idx} className="bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+            <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-200/50 shadow-sm">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                 <div className="flex-1">
                   <h5 className="text-base font-bold text-slate-800 mb-2">{topic.title}</h5>
                   <p className="text-sm text-slate-600 mb-4 leading-relaxed">{topic.description}</p>
                   
                   <div className="flex flex-wrap gap-2 mb-1">
-                    <span className="px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-xs text-blue-600 font-semibold shadow-xs">
+                    <span className="px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-full text-xs text-indigo-600 font-semibold shadow-xs">
                       主要關鍵字: {topic.focusKeyword || '無'}
                     </span>
                     {(topic.longTailKeywords || []).slice(0, 3).map((keyword, i) => (
@@ -127,7 +127,7 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <h6 className="text-xs font-bold text-slate-500">AI Studio 生成提示詞</h6>
-                            <span className="px-2 py-0.5 bg-blue-50 border border-blue-200 text-blue-600 text-[10px] font-bold rounded-lg shadow-xs">React + Tailwind CSS</span>
+                            <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-600 text-[10px] font-bold rounded-lg shadow-xs">React + Tailwind CSS</span>
                           </div>
                           <button
                             onClick={() => copyToClipboard(strategy.aiStudioPrompts[idx], idx, 'aiStudio')}
@@ -203,11 +203,11 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
       </div>
 
       {/* 互動元素建議 */}
-      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+      <div className="mb-8 bg-slate-50 rounded-2xl p-6 border border-slate-200/50 shadow-sm">
         <h4 className="text-lg font-bold text-slate-800 mb-4">互動元素建議</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {(strategy.interactiveElements || []).map((element, idx) => (
-            <div key={idx} className="bg-slate-50 rounded-xl p-4 border border-slate-200/60">
+            <div key={idx} className="bg-white rounded-xl p-4 border border-slate-200/80">
               <h5 className="text-sm font-bold text-slate-800 mb-2">{element.type}</h5>
               <p className="text-xs text-slate-600 leading-relaxed">{element.description}</p>
             </div>
@@ -216,11 +216,11 @@ export const ContentStrategy: React.FC<ContentStrategyProps> = ({ strategy, prod
       </div>
 
       {/* CTA 建議 */}
-      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+      <div className="mb-8 bg-slate-50 rounded-2xl p-6 border border-slate-200/50 shadow-sm">
         <h4 className="text-lg font-bold text-slate-800 mb-4">行動呼籲文案建議</h4>
         <div className="flex flex-wrap gap-3">
           {(strategy.ctaSuggestions || []).map((cta, idx) => (
-            <div key={idx} className="px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200/65 rounded-xl font-medium text-sm shadow-xs">
+            <div key={idx} className="px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200/65 rounded-xl font-medium text-sm shadow-xs">
               {cta}
             </div>
           ))}

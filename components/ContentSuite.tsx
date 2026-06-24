@@ -22,9 +22,9 @@ const ScriptEditorRow: React.FC<{
   onChange: (id: string, field: keyof ContentItem, value: string) => void 
 }> = ({ item, onChange }) => {
   return (
-    <div className="bg-white/70 border border-slate-200/50 backdrop-blur-md rounded-2xl p-4 mb-4 shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 mb-4 shadow-sm hover:shadow-md transition">
       <div className="flex items-center justify-between mb-2">
-        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg border ${item.ratio === '1:1' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-pink-50 text-pink-600 border-pink-200'}`}>
+        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg border ${item.ratio === '1:1' ? 'bg-indigo-50 text-indigo-600 border-indigo-200' : 'bg-pink-50 text-pink-600 border-pink-200'}`}>
           {item.ratio} | {item.type.replace('_', ' ')}
         </span>
         <span className="text-xs text-slate-400">ID: {item.id}</span>
@@ -34,31 +34,31 @@ const ScriptEditorRow: React.FC<{
         {/* Text Content */}
         <div className="space-y-3">
           <div>
-            <label className="block text-xs font-bold text-slate-500 mb-1">標題 (Headline)</label>
+            <label className="block text-[10px] font-bold text-slate-500 mb-1">標題 (Headline)</label>
             <input 
               type="text" 
               value={item.title_zh}
               onChange={(e) => onChange(item.id, 'title_zh', e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none shadow-sm"
+              className="modern-input py-1.5 px-3 text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-500 mb-1">內文 (Copy)</label>
+            <label className="block text-[10px] font-bold text-slate-500 mb-1">內文 (Copy)</label>
             <textarea 
               value={item.copy_zh}
               onChange={(e) => onChange(item.id, 'copy_zh', e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none shadow-sm resize-none h-20"
+              className="modern-input h-20 resize-none py-1.5 px-3 text-xs"
             />
           </div>
         </div>
 
         {/* Visual Prompt */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 mb-1">視覺提示詞 (Prompt)</label>
+          <label className="block text-[10px] font-bold text-slate-500 mb-1">視覺提示詞 (Prompt)</label>
           <textarea 
             value={item.visual_prompt_en}
             onChange={(e) => onChange(item.id, 'visual_prompt_en', e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none font-mono shadow-sm resize-none h-36"
+            className="modern-input h-36 resize-none font-mono py-1.5 px-3 text-[10px] bg-slate-50/50"
           />
           <p className="text-[10px] text-slate-400 mt-1.5 font-medium">摘要: {item.visual_summary_zh}</p>
         </div>
@@ -119,10 +119,10 @@ const ProductionCard: React.FC<{
   };
   
   const containerClass = getContainerClass();
-  const labelClass = actualRatio === '1:1' ? "bg-blue-50 text-blue-600 border-blue-200 shadow-sm" : "bg-pink-50 text-pink-600 border-pink-200 shadow-sm";
+  const labelClass = actualRatio === '1:1' ? "bg-indigo-50 text-indigo-600 border-indigo-200 shadow-sm" : "bg-pink-50 text-pink-600 border-pink-200 shadow-sm";
 
   return (
-    <div className="flex flex-col gap-3 group relative bg-white/70 border border-slate-200/50 backdrop-blur-md rounded-2xl p-4 shadow-sm">
+    <div className="flex flex-col gap-3 group relative bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm hover:shadow-md transition">
         {/* Image Display Area */}
         <div className={`relative rounded-xl overflow-hidden bg-slate-100 border border-slate-200/60 ${containerClass}`}>
             {image ? (
@@ -164,11 +164,11 @@ const ProductionCard: React.FC<{
                     )}
                     
                     {loading ? (
-                        <Spinner className="w-8 h-8 text-blue-600 relative z-10" />
+                        <Spinner className="w-8 h-8 text-indigo-600 relative z-10" />
                     ) : (
                         <button 
                             onClick={handleGenerate}
-                            className="w-12 h-12 rounded-full bg-white/85 hover:bg-white hover:text-blue-600 text-slate-500 border border-slate-200 flex items-center justify-center transition-all relative z-10 shadow-sm"
+                            className="w-12 h-12 rounded-full bg-white/85 hover:bg-white hover:text-indigo-600 text-slate-500 border border-slate-200 flex items-center justify-center transition-all relative z-10 shadow-sm cursor-pointer"
                         >
                             <Play className="w-5 h-5 fill-current ml-0.5" />
                         </button>
@@ -342,13 +342,13 @@ export const ContentSuite: React.FC<ContentSuiteProps> = ({ plan, onPlanUpdate, 
                 <div className="bg-slate-200/50 p-1 rounded-xl flex items-center border border-slate-200/40">
                     <button 
                         onClick={() => setMode('review')}
-                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${mode === 'review' ? 'bg-white text-slate-800 shadow-sm border border-slate-200/50' : 'text-slate-500 hover:text-slate-800'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${mode === 'review' ? 'bg-white text-slate-800 shadow-sm border border-slate-200/50' : 'text-slate-500 hover:text-slate-800'}`}
                     >
                         1. 腳本審閱 (Script)
                     </button>
                     <button 
                         onClick={() => setMode('production')}
-                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${mode === 'production' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${mode === 'production' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
                     >
                         2. 圖片製作 (Production)
                     </button>
@@ -372,7 +372,7 @@ export const ContentSuite: React.FC<ContentSuiteProps> = ({ plan, onPlanUpdate, 
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all font-semibold border ${
                             isDownloading || generatedImages.size === 0
                                 ? 'bg-slate-200 text-slate-400 cursor-not-allowed border-slate-200'
-                                : 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600 shadow-md shadow-blue-500/10'
+                                : 'bg-indigo-600 hover:bg-indigo-700 text-white border-indigo-600 shadow-[0_4px_14px_0_rgba(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 cursor-pointer'
                         }`}
                         title={generatedImages.size === 0 ? '請先生成圖片' : `下載 ${generatedImages.size} 張圖片`}
                     >
@@ -395,11 +395,11 @@ export const ContentSuite: React.FC<ContentSuiteProps> = ({ plan, onPlanUpdate, 
         {/* MODE: SCRIPT REVIEW */}
         {mode === 'review' && (
             <div className="space-y-6">
-                <div className="bg-blue-50 border border-blue-200 p-4 rounded-2xl mb-6 flex items-start gap-3 text-left">
-                    <HelpCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl mb-6 flex items-start gap-3 text-left">
+                    <HelpCircle className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
                     <div>
-                        <p className="text-blue-700 text-sm font-bold mb-1">腳本審閱模式</p>
-                        <p className="text-blue-600/80 text-xs">請在此階段確認並編輯所有圖片的文案與 AI 提示詞。確認無誤後，點擊右上角切換至「圖片製作」模式開始生成。</p>
+                        <p className="text-indigo-700 text-sm font-bold mb-1">腳本審閱模式</p>
+                        <p className="text-indigo-600/80 text-xs">請在此階段確認並編輯所有圖片的文案與 AI 提示詞。確認無誤後，點擊右上角切換至「圖片製作」模式開始生成。</p>
                     </div>
                 </div>
 
@@ -420,7 +420,7 @@ export const ContentSuite: React.FC<ContentSuiteProps> = ({ plan, onPlanUpdate, 
                 <div className="flex justify-end pt-4">
                     <button 
                         onClick={() => setMode('production')}
-                        className="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors flex items-center gap-2 shadow-md shadow-blue-500/10"
+                        className="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex items-center gap-2"
                     >
                         <span>確認定稿，進入製作</span>
                         <Play className="w-4 h-4 fill-current ml-0.5" />
@@ -435,7 +435,7 @@ export const ContentSuite: React.FC<ContentSuiteProps> = ({ plan, onPlanUpdate, 
                 {/* Section 1: Main Images */}
                 <div className="mb-12">
                     <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span className="w-1.5 h-5 bg-blue-600 rounded-full shadow-xs shadow-blue-500/20"></span>
+                        <span className="w-1.5 h-5 bg-indigo-600 rounded-full shadow-xs shadow-indigo-500/20"></span>
                         方形主圖 (Main Visuals)
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">

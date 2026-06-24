@@ -64,10 +64,10 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
   const containerClass = getContainerClass();
   const labelClass = aspectRatio === '9:16' || aspectRatio === '16:9' 
     ? "bg-pink-50 text-pink-600 border-pink-200 shadow-sm" 
-    : "bg-blue-50 text-blue-600 border-blue-200 shadow-sm";
+    : "bg-indigo-50 text-indigo-600 border-indigo-200 shadow-sm";
 
   return (
-    <div className="flex flex-col gap-3 group relative bg-white/70 border border-slate-200/50 backdrop-blur-md rounded-2xl p-4 shadow-sm">
+    <div className="flex flex-col gap-3 group relative bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm transition hover:shadow-md">
       {/* Image Display Area */}
       <div className={`relative rounded-xl overflow-hidden bg-slate-100 border border-slate-200/60 ${containerClass}`}>
         {generatedImage ? (
@@ -76,7 +76,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
             <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="p-2 bg-white/30 hover:bg-white/50 rounded-full text-white backdrop-blur-md transition-colors"
+                className="p-2 bg-white/30 hover:bg-white/50 rounded-full text-white backdrop-blur-md transition-colors cursor-pointer"
                 title="放大檢視"
               >
                 <Maximize2 className="w-5 h-5" />
@@ -113,11 +113,11 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
             )}
             
             {isLoading ? (
-              <Spinner className="w-8 h-8 text-blue-600 relative z-10" />
+              <Spinner className="w-8 h-8 text-indigo-600 relative z-10" />
             ) : (
               <button 
                 onClick={handleGenerate}
-                className="w-12 h-12 rounded-full bg-white/80 text-slate-600 hover:text-blue-600 hover:bg-white flex items-center justify-center transition-all border border-slate-200 relative z-10 shadow-sm"
+                className="w-12 h-12 rounded-full bg-white/85 text-slate-600 hover:text-indigo-600 hover:bg-white flex items-center justify-center transition-all border border-slate-200 relative z-10 shadow-sm cursor-pointer"
               >
                 <Play className="w-5 h-5 fill-current ml-0.5" />
               </button>
@@ -174,9 +174,9 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
                   clearImage();
                 }
               }}
-              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors ${
+              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
                 aspectRatio === '3:4' 
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-xs' 
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' 
                   : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
               }`}
             >
@@ -189,9 +189,9 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
                   clearImage();
                 }
               }}
-              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors ${
+              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
                 aspectRatio === '4:3' 
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-xs' 
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' 
                   : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
               }`}
             >
@@ -204,9 +204,9 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
                   clearImage();
                 }
               }}
-              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors ${
+              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
                 aspectRatio === '9:16' 
-                  ? 'bg-pink-600 text-white border-pink-600 shadow-xs' 
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' 
                   : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
               }`}
             >
@@ -219,9 +219,9 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
                   clearImage();
                 }
               }}
-              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors ${
+              className={`py-1 px-2 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
                 aspectRatio === '16:9' 
-                  ? 'bg-pink-600 text-white border-pink-600 shadow-xs' 
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' 
                   : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
               }`}
             >
@@ -230,11 +230,11 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data, index, defaultRefI
           </div>
         </div>
 
-        {/* Generate Button（提示詞已在上方顯示，執行前可檢視） */}
+        {/* Generate Button */}
         <button
           onClick={handleGenerate}
           disabled={isLoading}
-          className="w-full py-2.5 px-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-xs"
+          className="w-full py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_0_rgba(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 cursor-pointer"
         >
           {isLoading ? (
             <>

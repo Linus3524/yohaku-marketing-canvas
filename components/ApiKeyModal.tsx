@@ -42,7 +42,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave }) => {
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
       <div className="bg-white/80 border border-slate-200/50 rounded-3xl max-w-md w-full p-8 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in duration-300">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-blue-500/10">
+          <div className="w-12 h-12 bg-indigo-600 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/10">
             <Key className="w-6 h-6 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-slate-800 mb-2">設定 Gemini API</h2>
@@ -66,8 +66,8 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave }) => {
                   }
                 }}
                 placeholder="AIzaSy..."
-                className={`w-full bg-white border rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none transition-colors pr-10 shadow-sm focus:ring-1 focus:ring-blue-500 ${
-                  validationError ? 'border-red-500' : 'border-slate-200 focus:border-blue-500'
+                className={`modern-input pr-10 ${
+                  validationError ? 'border-red-500 focus:border-red-500' : ''
                 }`}
                 required
               />
@@ -91,7 +91,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave }) => {
           <button 
             type="submit"
             disabled={apiKey.trim().length === 0 || !!validationError}
-            className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl hover:opacity-95 transition-opacity shadow-md shadow-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-[0_4px_14px_0_rgba(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             開始使用
           </button>
@@ -102,7 +102,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave }) => {
             href="https://aistudio.google.com/app/apikey" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-xs text-blue-600 hover:text-blue-500 underline font-medium"
+            className="text-xs text-indigo-600 hover:text-indigo-500 underline font-medium"
           >
             還沒有 Key? 點此免費獲取
           </a>

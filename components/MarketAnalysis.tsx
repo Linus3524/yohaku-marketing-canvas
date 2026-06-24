@@ -10,14 +10,14 @@ interface MarketAnalysisProps {
 
 export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, productName, onDownload }) => {
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 pb-20">
+    <div className="w-full text-left">
       <div className="mb-10">
         <div className="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
           <h3 className="text-xl font-bold text-slate-800">Phase 3: 產品市場分析</h3>
           {onDownload && (
             <button
               onClick={onDownload}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 shadow-sm"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm cursor-pointer"
             >
               <Download className="w-4 h-4" />
               下載分析報告
@@ -27,7 +27,7 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 產品核心價值 */}
-      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+      <div className="mb-8 bg-slate-50 rounded-2xl p-6 border border-slate-200/50 shadow-sm">
         <h4 className="text-lg font-bold text-slate-800 mb-4">產品核心價值</h4>
         
         <div className="mb-6 bg-slate-50/50 p-4 rounded-xl border border-slate-200/30">
@@ -59,7 +59,7 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 目標市場定位 */}
-      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+      <div className="mb-8 bg-slate-50 rounded-2xl p-6 border border-slate-200/50 shadow-sm">
         <h4 className="text-lg font-bold text-slate-800 mb-4">目標市場定位</h4>
         
         <div className="space-y-6">
@@ -92,7 +92,7 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 競爭對手分析 */}
-      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+      <div className="mb-8 bg-slate-50 rounded-2xl p-6 border border-slate-200/50 shadow-sm">
         <h4 className="text-lg font-bold text-slate-800 mb-4">競爭對手分析</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {analysis.competitors.map((competitor, idx) => (
@@ -123,7 +123,7 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
       </div>
 
       {/* 潛在客戶描繪 */}
-      <div className="mb-8 bg-white/70 rounded-2xl p-6 border border-slate-200/50 backdrop-blur-md shadow-sm">
+      <div className="mb-8 bg-slate-50 rounded-2xl p-6 border border-slate-200/50 shadow-sm">
         <h4 className="text-lg font-bold text-slate-800 mb-4">潛在客戶描繪</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {analysis.buyerPersonas.map((persona, idx) => (
@@ -155,7 +155,7 @@ export const MarketAnalysis: React.FC<MarketAnalysisProps> = ({ analysis, produc
                 <h6 className="text-xs font-bold text-slate-400 mb-1.5">搜尋關鍵字</h6>
                 <div className="flex flex-wrap gap-1">
                   {persona.searchKeywords.map((keyword, i) => (
-                    <span key={i} className="px-2.5 py-0.5 bg-blue-50 border border-blue-200 rounded-md text-[10px] font-semibold text-blue-600">
+                    <span key={i} className="px-2.5 py-0.5 bg-indigo-50 border border-indigo-200 rounded-md text-[10px] font-semibold text-indigo-600">
                       {keyword}
                     </span>
                   ))}

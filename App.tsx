@@ -13,6 +13,7 @@ import { Phase3Section } from './components/Phase3Section';
 import { Phase4Section } from './components/Phase4Section';
 import { Phase5Section } from './components/Phase5Section';
 import { DebugPromptModal } from './components/DebugPromptModal';
+import { LockedPhaseCard } from './components/LockedPhaseCard';
 import { AppError, ErrorType } from './utils/errorHandler';
 import { validateProductName, validateBrandContext, validateRefCopy } from './utils/validators';
 import { LanguageMode, getLanguageMode, setLanguageMode, isChineseMode } from './utils/languageMode';
@@ -58,6 +59,7 @@ const App: React.FC = () => {
   const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
   const [hasKey, setHasKey] = useState(false);
   const [languageMode, setLanguageModeState] = useState<LanguageMode>(getLanguageMode());
+  const [isInputExpanded, setIsInputExpanded] = useState(true);
 
   // --- Check for API Key on mount ---
   useEffect(() => {
@@ -85,8 +87,14 @@ const App: React.FC = () => {
 
   const handleReset = () => {
     setAppState(AppState.IDLE);
+    setAnalysisResult(null);
+    setContentPlan(null);
+    setEditedPlanItems([]);
+    setMarketAnalysis(null);
+    setContentStrategy(null);
     setErrorMsg("");
     setErrorType(null);
+    setIsInputExpanded(true);
   };
 
   // --- File Handler ---
@@ -121,9 +129,12 @@ const App: React.FC = () => {
       setAnalysisResult(null);
       setContentPlan(null);
       setEditedPlanItems([]);
+      setMarketAnalysis(null);
+      setContentStrategy(null);
       setAppState(AppState.IDLE);
       setErrorMsg("");
       setErrorType(null);
+      setIsInputExpanded(true);
     }
   };
 
@@ -148,6 +159,7 @@ const App: React.FC = () => {
       const result = await analyzeProductImage(selectedFile, productName, brandContext);
       setAnalysisResult(result);
       setAppState(AppState.RESULTS);
+      setIsInputExpanded(false);
     } catch (e) {
       handleError(e, "分析過程中發生了意外錯誤，請稍候再試。", AppState.ERROR);
     }
@@ -379,7 +391,7 @@ const App: React.FC = () => {
         />
 
         {/* Phase 3 */}
-        {isPhase3Visible && (
+        {isPhase3Visible ? (
           <Phase3Section
             appState={appState}
             marketAnalysis={marketAnalysis}
@@ -391,10 +403,18 @@ const App: React.FC = () => {
             onRegionChange={setMarketRegion}
             onDownloadPhase3Report={handleDownloadPhase3Report}
           />
+        ) : (
+          <LockedPhaseCard
+            phaseNumber={3}
+            title="本地市場定位與競品分析"
+            description="採用即時 Google 搜尋檢索特定市場的競品動態，解讀在地文化洞察，明確產品核心優勢與買家人物誌（Buyer Persona）。"
+            isLoading={appState === AppState.ANALYZING_MARKET}
+            loadingMessage="正在透過 Google Search 檢索並分析本地市場數據..."
+          />
         )}
 
         {/* Phase 4 */}
-        {isPhase4Visible && (
+        {isPhase4Visible ? (
           <Phase4Section
             appState={appState}
             contentStrategy={contentStrategy}
@@ -404,12 +424,26 @@ const App: React.FC = () => {
             productName={productName}
             onDownloadPhase4Report={handleDownloadPhase4Report}
           />
+        ) : (
+          <LockedPhaseCard
+            phaseNumber={4}
+            title="內容行銷與 SEO 優化"
+            description="基於市場分析結果，生成 3 個行銷內容主題、長尾關鍵字佈局、互動元素建議、以及網頁生成（React + Tailwind）和簡報製作（Gamma.app）的提示詞。"
+            isLoading={appState === AppState.ANALYZING_CONTENT}
+            loadingMessage="正在生成專業內容策略與 SEO 優化方案..."
+          />
         )}
 
         {/* Phase 5 */}
-        {isPhase5Visible && (
+        {isPhase5Visible ? (
           <Phase5Section
             productName={productName}
+          />
+        ) : (
+          <LockedPhaseCard
+            phaseNumber={5}
+            title="電商 Landing Page 生成 (Ultra 限定)"
+            description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
           />
         )}
       </div>
@@ -465,52 +499,144 @@ const App: React.FC = () => {
         {/* Global Error */}
         <ErrorBanner errorMsg={errorMsg} errorType={errorType} onReset={handleReset} />
 
-        {/* Loading States */}
-        {appState === AppState.ANALYZING && (
-          <LoadingOverlay title="AI 總監正在分析產品" description="正在解讀品牌語意與視覺特徵..." colorClass="blue" />
-        )}
-        {appState === AppState.ANALYZING_MARKET && (
-          <LoadingOverlay title="Phase 3: 市場分析中" description="正在分析產品核心價值、市場定位、競爭對手與潛在客戶..." colorClass="blue" />
-        )}
-        {appState === AppState.ANALYZING_CONTENT && (
-          <LoadingOverlay title="Phase 4: 內容策略生成中" description="正在生成內容主題、SEO 策略與 AI Studio 提示詞..." colorClass="blue" />
-        )}
-
-        {/* Idle View */}
-        {appState === AppState.IDLE && (
-          <div className="flex-1 flex flex-col items-center mt-8 text-center">
-            <div className="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
-              v0.8
+        {/* 頂部產品資料卡片 */}
+        <div className="w-full max-w-4xl mx-auto mb-8 bg-white/70 rounded-3xl p-8 border border-slate-200/50 backdrop-blur-md shadow-sm">
+          {!analysisResult ? (
+            <div className="text-center">
+              <div className="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
+                v0.8
+              </div>
+              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 serif mb-3 leading-tight">
+                打造完整的品牌視覺與電商行銷資產
+              </h2>
+              <p className="text-slate-500 max-w-xl mx-auto mb-8 text-sm md:text-base leading-relaxed">
+                結合產品識別、品牌故事與競品策略。一鍵分析解鎖<br />
+                視覺策略定位、社群行銷套圖企劃、本地市場分析與內容 SEO 方案。
+              </p>
+              <InputForm
+                productName={productName}
+                brandContext={brandContext}
+                selectedFile={selectedFile}
+                imagePreview={imagePreview}
+                inputErrors={inputErrors}
+                appState={appState}
+                onProductNameChange={(val) => {
+                  setProductName(val);
+                  if (inputErrors.productName) setInputErrors({ ...inputErrors, productName: undefined });
+                }}
+                onBrandContextChange={(val) => {
+                  setBrandContext(val);
+                  if (inputErrors.brandContext) setInputErrors({ ...inputErrors, brandContext: undefined });
+                }}
+                onFileChange={handleFileChange}
+                onAnalyze={handleAnalyze}
+              />
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-slate-900 serif mb-4 leading-tight">
-              打造完整的<br />品牌視覺資產
-            </h2>
-            <p className="text-slate-500 max-w-xl mx-auto mb-8 text-lg">
-              結合產品識別、品牌故事與競品策略。<br />
-              一鍵生成廣告海報與 <span className="text-blue-600 font-bold">8 張完整的社群行銷套圖</span>。
-            </p>
-            <InputForm
-              productName={productName}
-              brandContext={brandContext}
-              selectedFile={selectedFile}
-              imagePreview={imagePreview}
-              inputErrors={inputErrors}
-              appState={appState}
-              onProductNameChange={(val) => {
-                setProductName(val);
-                if (inputErrors.productName) setInputErrors({ ...inputErrors, productName: undefined });
-              }}
-              onBrandContextChange={(val) => {
-                setBrandContext(val);
-                if (inputErrors.brandContext) setInputErrors({ ...inputErrors, brandContext: undefined });
-              }}
-              onFileChange={handleFileChange}
-              onAnalyze={handleAnalyze}
-            />
-          </div>
+          ) : (
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  {imagePreview && (
+                    <img src={imagePreview} alt="Preview" className="w-14 h-14 object-contain bg-white border border-slate-200/60 rounded-2xl p-1.5 shadow-xs" />
+                  )}
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-800">已分析產品：{productName}</h3>
+                    <p className="text-xs text-slate-500 max-w-md truncate">品牌背景：{brandContext || '未提供'}</p>
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => setIsInputExpanded(!isInputExpanded)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200/85 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 transition-colors shadow-xs self-start sm:self-auto"
+                >
+                  {isInputExpanded ? '收起產品資料' : '編輯產品資料'}
+                </button>
+              </div>
+
+              {isInputExpanded && (
+                <div className="mt-6 pt-6 border-t border-slate-200/60">
+                  <InputForm
+                    productName={productName}
+                    brandContext={brandContext}
+                    selectedFile={selectedFile}
+                    imagePreview={imagePreview}
+                    inputErrors={inputErrors}
+                    appState={appState}
+                    onProductNameChange={(val) => {
+                      setProductName(val);
+                      if (inputErrors.productName) setInputErrors({ ...inputErrors, productName: undefined });
+                    }}
+                    onBrandContextChange={(val) => {
+                      setBrandContext(val);
+                      if (inputErrors.brandContext) setInputErrors({ ...inputErrors, brandContext: undefined });
+                    }}
+                    onFileChange={handleFileChange}
+                    onAnalyze={handleAnalyze}
+                  />
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      onClick={handleAnalyze}
+                      className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-blue-500/10"
+                    >
+                      重新執行 AI 分析
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* 5 階段工作流看板 (5-Phase Workflow Board) */}
+        
+        {/* Phase 1: 視覺策略定位 */}
+        {analysisResult && imagePreview ? (
+          renderPhase1Results()
+        ) : (
+          <LockedPhaseCard
+            phaseNumber={1}
+            title="視覺策略定位"
+            description="分析上傳的產品圖片與品牌背景，AI 總監將自動生成 3 條不同的視覺策略路線，包含主標題、副標題、風格簡報與配圖繪圖提示詞。"
+            isLoading={appState === AppState.ANALYZING}
+            loadingMessage="AI 總監正在分析產品，解讀品牌視覺特徵與商業語意..."
+          />
         )}
 
-        {isPhaseResultsVisible && renderPhase1Results()}
+        {/* Phase 2: 社群行銷套圖企劃 */}
+        {!analysisResult && (
+          <LockedPhaseCard
+            phaseNumber={2}
+            title="社群行銷套圖企劃"
+            description="依據選定的視覺路線，一鍵規劃並生成包含 8 張社群行銷套圖的完整腳本（主圖、情境圖、痛點圖、特色圖等）與相應的英文繪圖提示詞。"
+          />
+        )}
+
+        {/* Phase 3: 本地市場定位與競品分析 */}
+        {!analysisResult && (
+          <LockedPhaseCard
+            phaseNumber={3}
+            title="本地市場分析與定位"
+            description="採用即時 Google 搜尋檢索特定市場的競品動態，解讀在地文化洞察，明確產品核心優勢與買家人物誌（Buyer Persona）。"
+          />
+        )}
+
+        {/* Phase 4: 內容行銷與 SEO 優化 */}
+        {!analysisResult && (
+          <LockedPhaseCard
+            phaseNumber={4}
+            title="內容行銷與 SEO 優化"
+            description="基於市場分析結果，生成 3 個行銷內容主題、長尾關鍵字佈局、互動元素建議、以及網頁生成（React + Tailwind）和簡報製作（Gamma.app）的提示詞。"
+          />
+        )}
+
+        {/* Phase 5: 電商 Landing Page 生成 (Ultra 限定) */}
+        {!analysisResult && (
+          <LockedPhaseCard
+            phaseNumber={5}
+            title="電商 Landing Page 生成 (Ultra 限定)"
+            description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
+          />
+        )}
       </main>
 
       <footer className="w-full py-6 text-center border-t border-slate-200/50 text-xs text-slate-400">

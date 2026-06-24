@@ -31,7 +31,7 @@ export const InputForm: React.FC<InputFormProps> = ({
     {/* Left: Image Upload */}
     <div className="order-2 md:order-1">
       <label
-        className={`flex flex-col items-center justify-center w-full h-80 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedFile ? 'border-blue-500 bg-white shadow-sm' : 'border-slate-300 bg-white/50 hover:border-blue-500 hover:bg-white shadow-sm'
+        className={`flex flex-col items-center justify-center w-full h-44 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden ${selectedFile ? 'border-blue-500 bg-white shadow-sm' : 'border-slate-300 bg-white/50 hover:border-blue-500 hover:bg-white shadow-sm'
           }`}
       >
         {imagePreview ? (
@@ -77,7 +77,7 @@ export const InputForm: React.FC<InputFormProps> = ({
           value={brandContext}
           onChange={(e) => onBrandContextChange(e.target.value)}
           placeholder="可輸入品牌官網網址(AI會分析網址文字) 或直接貼上品牌故事、核心價值..."
-          className={`w-full bg-white border rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none transition-colors h-40 resize-none text-sm leading-relaxed shadow-sm focus:ring-1 focus:ring-blue-500 ${inputErrors.brandContext ? 'border-red-500' : 'border-slate-200 focus:border-blue-500'
+          className={`w-full bg-white border rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none transition-colors h-20 resize-none text-sm leading-relaxed shadow-sm focus:ring-1 focus:ring-blue-500 ${inputErrors.brandContext ? 'border-red-500' : 'border-slate-200 focus:border-blue-500'
             }`}
         />
         {inputErrors.brandContext && (

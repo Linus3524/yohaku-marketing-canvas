@@ -23,7 +23,163 @@ import { generatePhase1Report, generatePhase3Report, generatePhase4Report } from
 import { generateFullReport } from './services/geminiService';
 import { downloadTextFile } from './utils/downloadHelper';
 import { FILE_LIMITS } from './utils/constants';
-import { FileText, Download } from 'lucide-react';
+import { FileText, Download, Lock, Sparkles, Search, Globe, Users, Copy, Layout, CheckCircle, ArrowRight, Star } from 'lucide-react';
+
+// --- High-Fidelity Mock UI Previews for Locked Phases ---
+
+const Phase1Preview: React.FC = () => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {['品牌故事感 (Route A)', '自然極簡留白 (Route B)', '日常溫馨實境 (Route C)'].map((route, i) => (
+        <div key={i} className="p-4 rounded-xl border border-slate-200 bg-white/40 text-slate-400">
+          <div className="text-[10px] font-bold uppercase tracking-wider opacity-60">視覺定位策略</div>
+          <div className="font-bold text-sm text-slate-500 mt-1">{route}</div>
+        </div>
+      ))}
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {[1, 2, 3].map((idx) => (
+        <div key={idx} className="bg-white/40 border border-slate-200/50 rounded-2xl p-4 flex flex-col min-h-[220px]">
+          <div className="w-full h-32 bg-slate-100/50 rounded-xl mb-3 flex items-center justify-center border border-slate-200/40">
+            <Layout className="w-8 h-8 text-slate-300" />
+          </div>
+          <div className="h-4 bg-slate-200/60 rounded-full w-2/3 mb-2 animate-pulse"></div>
+          <div className="h-3 bg-slate-200/40 rounded-full w-5/6 mb-4"></div>
+          <div className="mt-auto flex justify-between gap-2">
+            <div className="h-8 bg-slate-200/50 rounded-lg w-16"></div>
+            <div className="h-8 bg-slate-200/50 rounded-lg w-20"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const Phase2Preview: React.FC = () => (
+  <div className="space-y-6">
+    <div className="bg-white/40 border border-slate-200/50 rounded-2xl p-6 flex flex-col md:flex-row gap-6">
+      <div className="flex-1 space-y-2">
+        <div className="h-3 bg-slate-200/60 rounded-full w-32 mb-2"></div>
+        <div className="h-16 bg-white/60 border border-slate-200/40 rounded-xl p-3"></div>
+      </div>
+      <div className="md:w-56 flex flex-col justify-end">
+        <div className="h-10 bg-slate-200/60 rounded-xl w-full"></div>
+      </div>
+    </div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {['主圖 - 質感商品照', '細節圖 - 產品特色', '痛點圖 - 解決方案', '情境圖 - 使用情境'].map((title, i) => (
+        <div key={i} className="bg-white/40 border border-slate-200/40 rounded-xl p-4 flex flex-col min-h-[160px]">
+          <div className="w-8 h-8 rounded-lg bg-slate-100/70 border border-slate-200/30 flex items-center justify-center font-bold text-xs text-slate-400 mb-2">
+            {i + 1}
+          </div>
+          <div className="font-bold text-xs text-slate-500 mb-1">{title}</div>
+          <div className="h-2.5 bg-slate-200/50 rounded-full w-5/6 mb-1.5"></div>
+          <div className="h-2 bg-slate-200/30 rounded-full w-2/3"></div>
+          <div className="w-full h-16 bg-slate-100/40 border border-slate-200/20 rounded-lg mt-auto flex items-center justify-center">
+            <Layout className="w-5 h-5 text-slate-300" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const Phase3Preview: React.FC = () => (
+  <div className="space-y-6">
+    <div className="flex flex-wrap gap-2">
+      {['台灣', '亞洲', '北美', '全球'].map((r, i) => (
+        <div key={i} className={`px-3 py-1.5 rounded-lg text-xs border border-slate-200/50 ${i === 0 ? 'bg-slate-200 text-slate-600 font-semibold' : 'bg-white/40 text-slate-400'}`}>
+          {r}
+        </div>
+      ))}
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-white/40 border border-slate-200/40 rounded-xl p-4 md:col-span-2 space-y-4">
+        <div className="font-bold text-xs text-slate-500 flex items-center gap-1.5">
+          <Globe className="w-3.5 h-3.5" /> 競品行銷策略分析
+        </div>
+        <div className="border border-slate-200/35 rounded-lg overflow-hidden text-[11px]">
+          <div className="grid grid-cols-3 bg-slate-100/60 p-2 font-bold text-slate-500 border-b border-slate-200/30">
+            <div>品牌 / 競品</div>
+            <div>優勢優特</div>
+            <div>行銷漏洞/策略</div>
+          </div>
+          {[
+            { name: '競品 A 品牌', adv: '聲量高、通路廣', strategy: '大量找KOL開箱、折價行銷' },
+            { name: '競品 B 品牌', adv: '天然無毒成分', strategy: '社群視覺精美，強調功能' }
+          ].map((c, i) => (
+            <div key={i} className="grid grid-cols-3 p-2 text-slate-400 border-b border-slate-200/20">
+              <div className="font-medium">{c.name}</div>
+              <div>{c.adv}</div>
+              <div>{c.strategy}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="bg-white/40 border border-slate-200/40 rounded-xl p-4 space-y-3">
+        <div className="font-bold text-xs text-slate-500 flex items-center gap-1.5">
+          <Users className="w-3.5 h-3.5" /> 目標人物誌 (Persona)
+        </div>
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-8 h-8 rounded-full bg-slate-200/80 animate-pulse"></div>
+          <div>
+            <div className="h-3 bg-slate-200/60 rounded-full w-20 mb-1"></div>
+            <div className="h-2 bg-slate-200/30 rounded-full w-12"></div>
+          </div>
+        </div>
+        <div className="h-2.5 bg-slate-200/45 rounded-full w-full"></div>
+        <div className="h-2 bg-slate-200/30 rounded-full w-5/6"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const Phase4Preview: React.FC = () => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {['為什麼你的商品需要減法？', '辦公室冷氣房必備！神物保養開箱'].map((topic, i) => (
+        <div key={i} className="bg-white/40 border border-slate-200/40 rounded-xl p-4 space-y-3">
+          <div className="font-bold text-xs text-slate-500">{topic}</div>
+          <div className="h-2.5 bg-slate-200/50 rounded-full w-full"></div>
+          <div className="h-2 bg-slate-200/30 rounded-full w-3/4"></div>
+          <div className="flex gap-2 mt-2 pt-2 border-t border-slate-200/20">
+            <span className="px-2 py-0.5 rounded bg-blue-50/50 text-[10px] text-blue-500 font-semibold border border-blue-100">主要關鍵字: 保濕</span>
+            <span className="px-2 py-0.5 rounded bg-slate-100/50 text-[10px] text-slate-400 font-medium">長尾字: 鎖水推薦</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div className="bg-white/40 border border-slate-200/40 rounded-xl p-4 flex justify-between items-center text-xs text-slate-400">
+      <div className="flex items-center gap-2">
+        <FileText className="w-4 h-4 text-slate-300" />
+        <span>生成 AI Studio (React + Tailwind) 提示詞及簡報提示詞</span>
+      </div>
+      <div className="h-7 bg-slate-200/50 rounded-lg w-20"></div>
+    </div>
+  </div>
+);
+
+const Phase5Preview: React.FC = () => (
+  <div className="space-y-6">
+    <div className="bg-white/40 border border-slate-200/40 rounded-xl p-6 space-y-4">
+      <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
+        <Layout className="w-4 h-4 text-slate-400" /> 
+        <span>電商 Landing Page 視覺及程式碼結構</span>
+      </div>
+      <div className="border border-slate-200/35 rounded-xl overflow-hidden p-4 space-y-3 bg-slate-100/20">
+        <div className="h-4 bg-slate-200/70 rounded w-1/3 mb-4 animate-pulse"></div>
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="h-10 bg-slate-200/45 rounded"></div>
+          <div className="h-10 bg-slate-200/45 rounded"></div>
+          <div className="h-10 bg-slate-200/45 rounded"></div>
+        </div>
+        <div className="h-8 bg-orange-600/30 border border-orange-500/20 rounded w-full flex items-center justify-center text-[10px] font-bold text-orange-600">
+          請至 Ultra 商業版本體驗智能配圖與部署
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const App: React.FC = () => {
   // --- Core State ---
@@ -410,6 +566,7 @@ const App: React.FC = () => {
             description="採用即時 Google 搜尋檢索特定市場的競品動態，解讀在地文化洞察，明確產品核心優勢與買家人物誌（Buyer Persona）。"
             isLoading={appState === AppState.ANALYZING_MARKET}
             loadingMessage="正在透過 Google Search 檢索並分析本地市場數據..."
+            previewContent={<Phase3Preview />}
           />
         )}
 
@@ -431,6 +588,7 @@ const App: React.FC = () => {
             description="基於市場分析結果，生成 3 個行銷內容主題、長尾關鍵字佈局、互動元素建議、以及網頁生成（React + Tailwind）和簡報製作（Gamma.app）的提示詞。"
             isLoading={appState === AppState.ANALYZING_CONTENT}
             loadingMessage="正在生成專業內容策略與 SEO 優化方案..."
+            previewContent={<Phase4Preview />}
           />
         )}
 
@@ -444,6 +602,7 @@ const App: React.FC = () => {
             phaseNumber={5}
             title="電商 Landing Page 生成 (Ultra 限定)"
             description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
+            previewContent={<Phase5Preview />}
           />
         )}
       </div>
@@ -599,6 +758,7 @@ const App: React.FC = () => {
             description="分析上傳的產品圖片與品牌背景，AI 總監將自動生成 3 條不同的視覺策略路線，包含主標題、副標題、風格簡報與配圖繪圖提示詞。"
             isLoading={appState === AppState.ANALYZING}
             loadingMessage="AI 總監正在分析產品，解讀品牌視覺特徵與商業語意..."
+            previewContent={<Phase1Preview />}
           />
         )}
 
@@ -608,6 +768,7 @@ const App: React.FC = () => {
             phaseNumber={2}
             title="社群行銷套圖企劃"
             description="依據選定的視覺路線，一鍵規劃並生成包含 8 張社群行銷套圖的完整腳本（主圖、情境圖、痛點圖、特色圖等）與相應的英文繪圖提示詞。"
+            previewContent={<Phase2Preview />}
           />
         )}
 
@@ -617,6 +778,7 @@ const App: React.FC = () => {
             phaseNumber={3}
             title="本地市場分析與定位"
             description="採用即時 Google 搜尋檢索特定市場的競品動態，解讀在地文化洞察，明確產品核心優勢與買家人物誌（Buyer Persona）。"
+            previewContent={<Phase3Preview />}
           />
         )}
 
@@ -626,6 +788,7 @@ const App: React.FC = () => {
             phaseNumber={4}
             title="內容行銷與 SEO 優化"
             description="基於市場分析結果，生成 3 個行銷內容主題、長尾關鍵字佈局、互動元素建議、以及網頁生成（React + Tailwind）和簡報製作（Gamma.app）的提示詞。"
+            previewContent={<Phase4Preview />}
           />
         )}
 
@@ -635,6 +798,7 @@ const App: React.FC = () => {
             phaseNumber={5}
             title="電商 Landing Page 生成 (Ultra 限定)"
             description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
+            previewContent={<Phase5Preview />}
           />
         )}
       </main>

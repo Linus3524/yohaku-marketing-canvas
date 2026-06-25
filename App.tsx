@@ -172,8 +172,8 @@ const Phase5Preview: React.FC = () => (
           <div className="h-10 bg-slate-200/45 rounded"></div>
           <div className="h-10 bg-slate-200/45 rounded"></div>
         </div>
-        <div className="h-8 bg-orange-600/30 border border-orange-500/20 rounded w-full flex items-center justify-center text-[10px] font-bold text-orange-600">
-          請至 Ultra 商業版本體驗智能配圖與部署
+        <div className="h-8 bg-indigo-50 border border-indigo-100 rounded w-full flex items-center justify-center text-[10px] font-bold text-indigo-600">
+          完成前四個階段後，即可在此一鍵生成專屬 Landing Page！
         </div>
       </div>
     </div>
@@ -474,10 +474,6 @@ const App: React.FC = () => {
           <button onClick={() => setIsKeyModalOpen(true)} className="text-indigo-600 hover:text-indigo-500 text-xs font-semibold bg-transparent border-0 cursor-pointer">
             {hasKey ? '更換 API Key' : '設定 API Key'}
           </button>
-          
-          <button className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition text-xs font-bold shadow-xs cursor-pointer">
-            升級 Pro
-          </button>
         </div>
       </header>
 
@@ -767,12 +763,18 @@ const App: React.FC = () => {
             {isPhase5Visible ? (
               <Phase5Section
                 productName={productName}
+                brandContext={brandContext}
+                selectedRoute={analysisResult ? analysisResult.marketing_routes[activeRouteIndex] : null}
+                contentPlan={contentPlan}
+                marketAnalysis={marketAnalysis}
+                contentStrategy={contentStrategy}
+                phase2GeneratedImages={phase2GeneratedImages}
               />
             ) : (
               <LockedPhaseCard
                 phaseNumber={5}
-                title="電商 Landing Page 生成 (Ultra 限定)"
-                description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地（商業版專屬）。"
+                title="電商 Landing Page 生成"
+                description="電商落地頁一鍵智能配圖與 HTML 原始碼導出，為所規劃的內容策略完成最後的視覺生產落地。"
                 previewContent={<Phase5Preview />}
               />
             )}

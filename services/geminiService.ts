@@ -385,3 +385,116 @@ export const generateContentStrategy = async (
     return parseAndValidate(response.text, validateContentStrategy, "內容策略", "內容策略");
   });
 };
+
+// --- Phase 5: Generate Landing Page ---
+
+export const generateLandingPage = async (
+  productName: string,
+  brandContext: string,
+  selectedRoute: MarketingRoute | null,
+  contentPlan: ContentPlan | null,
+  marketAnalysis: MarketAnalysis | null,
+  contentStrategy: ContentStrategy | null,
+  phase2GeneratedImages: Map<string, string>
+): Promise<string> => {
+  return safeApiCall(async () => {
+    const ai = createClient();
+
+    const routeText = selectedRoute ? `
+- Route Name: ${selectedRoute.route_name}
+- Headline: ${selectedRoute.headline_zh}
+- Subheadline: ${selectedRoute.subhead_zh}
+- Visual Style: ${selectedRoute.style_brief_zh}
+- Target Audience: ${selectedRoute.target_audience_zh || ''}
+- Visual Elements: ${selectedRoute.visual_elements_zh || ''}
+` : 'Not Selected';
+
+    const itemsText = contentPlan?.items ? contentPlan.items.map(item => `
+* ID: ${item.id}
+  - Type: ${item.type}
+  - Title: ${item.title_zh}
+  - Copy: ${item.copy_zh}
+  - Visual Description: ${item.visual_summary_zh}
+`).join('\n') : 'Not Available';
+
+    const marketText = marketAnalysis ? `
+- Core Values: ${marketAnalysis.productCoreValue.mainFeatures.join(', ')} / Advantages: ${marketAnalysis.productCoreValue.coreAdvantages.join(', ')}
+- Pain Points Solved: ${marketAnalysis.productCoreValue.painPointsSolved.join(', ')}
+- Target Personas: ${marketAnalysis.buyerPersonas.map(p => `${p.name} (${p.demographics})`).join(', ')}
+- Search Trends: ${marketAnalysis.marketPositioning.searchTrends.join(', ')}
+` : 'Not Available';
+
+    const strategyText = contentStrategy ? `
+- Topics: ${contentStrategy.contentTopics.map(t => `${t.title} (${t.focusKeyword})`).join(', ')}
+- CTAs: ${contentStrategy.ctaSuggestions.join(', ')}
+- Interactive Elements: ${contentStrategy.interactiveElements.map(e => `${e.type}: ${e.description}`).join(', ')}
+` : 'Not Available';
+
+    const promptText = `
+你是一位頂尖的 Landing Page 設計師與前端開發工程師。
+你的任務是為產品「${productName}」生成一個完整、專業、且響應式（RWD）的單一檔案落地頁（HTML）。
+請使用先前步驟中生成的所有行銷規劃與分析結果，來建構網頁的文案、版面結構、配色主題和各個區塊。
+
+【品牌資訊】
+${brandContext}
+
+【行銷視覺策略路線】
+${routeText}
+
+【內容企劃 (Phase 2)】
+${itemsText}
+
+【市場分析 (Phase 3)】
+${marketText}
+
+【內容策略 & SEO (Phase 4)】
+${strategyText}
+
+【重要：圖片置放指令】
+我們已經生成了與 Phase 2 企劃項目對應的產品圖片。
+你必須在 HTML 的 <img> 標籤中，使用該項目的 id 作為 src 屬性（或是帶有 "IMAGE_ITEM_" 前綴，例如 "IMAGE_ITEM_1"，其中 "1" 是 item id）。
+例如，如果某個區塊適合置放 ID 為 "1" 的企劃項目圖片，請寫成：
+<img src="IMAGE_ITEM_1" alt="..." /> 或 <img src="1" alt="..." />
+這非常重要，系統會自動在前端將其替換為真實的圖片。
+如果某些次要插圖或圖示沒有對應的 Phase 2 圖片，請使用 Unsplash 漂亮的 placeholder 網址或 SVG 圖示。
+
+【網頁設計與代碼要求】
+1. 引用 Tailwind CSS CDN: <script src="https://cdn.tailwindcss.com"></script>
+2. 在 <head> 中引用適合的 Google Fonts (例如 Noto Sans TC, Inter 等)。
+3. 設計符合上述視覺策略路線的精美主題（搭配對應的漸層色背景、陰影、字體與間距，打造高級感）。
+4. 網頁中必須包含：
+   - 導覽列 (Navbar)
+   - 首頁橫幅 (Hero Section)：有吸睛的主副標題、CTA 按鈕與產品主要視覺圖片。
+   - 產品特色區 (Features Grid)：列出主要特點與核心優勢。
+   - 情境展示區 (Showcase/Gallery)：使用 Phase 2 的產品生成圖片，展示使用情境或故事。
+   - 目標客群與痛點解決區 (Personas & Painpoints)。
+   - 互動區或常見問題區 (FAQ Accordion)：請用原生 JavaScript 寫簡單的展開收合邏輯。
+   - 底部強效 CTA (Call to Action) 區塊：引導用戶轉換。
+   - 頁尾 (Footer)。
+5. 回傳的內容必須是「完整且合法的 HTML」，不能有 Markdown 的 \`\`\`html 包裝。請直接從 <!DOCTYPE html> 開始，並以 </html> 結束。
+`;
+
+    const response = await retryWithBackoff(async () => {
+      return await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: { parts: [{ text: promptText }] },
+        config: {
+          systemInstruction: "You are a master landing page designer. You output clean, valid, professional HTML with inline Tailwind CSS and custom embedded styles. Return raw HTML directly without markdown code fences.",
+          maxOutputTokens: 8192
+        }
+      });
+    }, API_CONFIG.MAX_RETRIES, API_CONFIG.INITIAL_DELAY);
+
+    let html = response.text || "";
+    html = cleanJson(html);
+    if (html.startsWith("```html")) {
+      html = html.replace(/^```html\s*/, "").replace(/\s*```$/, "");
+    } else if (html.startsWith("```")) {
+      html = html.replace(/^```\s*/, "").replace(/\s*```$/, "");
+    }
+    html = html.trim();
+
+    return html;
+  });
+};
+
